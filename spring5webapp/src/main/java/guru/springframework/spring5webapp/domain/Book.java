@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Book {
@@ -20,6 +21,10 @@ public class Book {
 
 	private String title;
 	private String isbn;
+
+	@ManyToOne
+	@JoinColumn(name = "publisher_id")
+	private Publisher publisher;
 
 	@ManyToMany
 	@JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
@@ -35,6 +40,50 @@ public class Book {
 	public Book(String title, String isbn) {
 		this.title = title;
 		this.isbn = isbn;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Book)) {
+			return false;
+		}
+		Book other = (Book) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	/**
+	 * @return the publisher
+	 */
+	public Publisher getPublisher() {
+		return publisher;
+	}
+
+	/**
+	 * @param publisher the publisher to set
+	 */
+	public void setPublisher(Publisher publisher) {
+		this.publisher = publisher;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -79,39 +128,17 @@ public class Book {
 		this.authors = authors;
 	}
 
-	/**
-	 * @return the id
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
 	 */
-	public Long getId() {
-		return id;
-	}
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof Book)) {
-			return false;
-		}
-		Book other = (Book) obj;
-		return Objects.equals(id, other.id);
-	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Book [authors=").append(authors).append(", id=").append(id).append(", isbn=").append(isbn)
-				.append(", title=").append(title).append("]");
+				.append(", publisher=").append(publisher).append(", title=").append(title).append("]");
 		return builder.toString();
 	}
 }
