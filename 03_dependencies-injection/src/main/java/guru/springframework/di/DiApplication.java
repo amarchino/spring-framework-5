@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import guru.springframework.di.controllers.ConstructorInjectedController;
+import guru.springframework.di.controllers.I18nController;
 import guru.springframework.di.controllers.MyController;
 import guru.springframework.di.controllers.PropertyInjectedController;
 import guru.springframework.di.controllers.SetterInjectedController;
@@ -14,6 +15,10 @@ public class DiApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext ctx = SpringApplication.run(DiApplication.class, args);
+		
+		System.out.println("------ Primary Bean");
+		I18nController i18nController = (I18nController) ctx.getBean("i18nController");
+		System.out.println(i18nController.sayHello());
 		
 		System.out.println("------ Primary Bean");
 		MyController myController = (MyController) ctx.getBean("myController");
