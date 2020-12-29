@@ -1,6 +1,7 @@
 package guru.springframework.di.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
 import guru.springframework.di.services.GreetingService;
@@ -9,9 +10,10 @@ import guru.springframework.di.services.GreetingService;
 public class PropertyInjectedController {
 
 	@Autowired
+	@Qualifier("propertyGreetingService")
 	public GreetingService greetingService;
 	
 	public String getGreeting() {
-		return greetingService.seyGreeting();
+		return greetingService.sayGreeting();
 	}
 }
