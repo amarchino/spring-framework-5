@@ -1,6 +1,8 @@
 package guru.springframework.sfgpetclinic.model;
 
-public class PetType {
+public class PetType extends BaseEntity {
+
+	private static final long serialVersionUID = -3916053990363115879L;
 
 	private String name;
 
