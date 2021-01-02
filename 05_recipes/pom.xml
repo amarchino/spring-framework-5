@@ -39,8 +39,8 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.ibm.db2</groupId>
-			<artifactId>jcc</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
