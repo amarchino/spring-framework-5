@@ -10,6 +10,7 @@ import guru.springframework.di.controllers.MyController;
 import guru.springframework.di.controllers.PropertyInjectedController;
 import guru.springframework.di.controllers.SetterInjectedController;
 import guru.springframework.di.examplebeans.FakeDataSource;
+import guru.springframework.di.examplebeans.FakeJmsBroker;
 
 @SpringBootApplication
 public class DiApplication {
@@ -42,6 +43,12 @@ public class DiApplication {
 		System.out.println("user: " + fakeDataSource.getUser());
 		System.out.println("password: " + fakeDataSource.getPassword());
 		System.out.println("url: " + fakeDataSource.getUrl());
+		
+		System.out.println("------ Fake JMS Broker");
+		FakeJmsBroker fakeJmsBroker = ctx.getBean(FakeJmsBroker.class);
+		System.out.println("user: " + fakeJmsBroker.getUser());
+		System.out.println("password: " + fakeJmsBroker.getPassword());
+		System.out.println("url: " + fakeJmsBroker.getUrl());
 	}
 
 }
