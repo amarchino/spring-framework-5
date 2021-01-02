@@ -9,6 +9,7 @@ import guru.springframework.di.controllers.I18nController;
 import guru.springframework.di.controllers.MyController;
 import guru.springframework.di.controllers.PropertyInjectedController;
 import guru.springframework.di.controllers.SetterInjectedController;
+import guru.springframework.di.examplebeans.FakeDataSource;
 
 @SpringBootApplication
 public class DiApplication {
@@ -35,6 +36,12 @@ public class DiApplication {
 		System.out.println("------ Constructor");
 		ConstructorInjectedController constructorInjectedController = (ConstructorInjectedController) ctx.getBean("constructorInjectedController");
 		System.out.println(constructorInjectedController.getGreeting());
+		
+		System.out.println("------ Fake Data Source");
+		FakeDataSource fakeDataSource = ctx.getBean(FakeDataSource.class);
+		System.out.println("user: " + fakeDataSource.getUser());
+		System.out.println("password: " + fakeDataSource.getPassword());
+		System.out.println("url: " + fakeDataSource.getUrl());
 	}
 
 }
