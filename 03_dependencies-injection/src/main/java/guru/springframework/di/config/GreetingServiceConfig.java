@@ -19,20 +19,20 @@ public class GreetingServiceConfig {
 
 	@Bean
 	@Primary
-	@Profile({"default", "EN"})
+	@Profile({"default", "en"})
 	GreetingService i18nEnglishGreetingService(GreetingServiceFactory greetingServiceFactory) {
-		return greetingServiceFactory.createGreetingService("EN");
+		return greetingServiceFactory.createGreetingService("en");
 	}
 	@Bean
 	@Primary
-	@Profile("ES")
+	@Profile("es")
 	GreetingService i18nSpanishGreetingService(GreetingServiceFactory greetingServiceFactory) {
-		return greetingServiceFactory.createGreetingService("ES");
+		return greetingServiceFactory.createGreetingService("es");
 	}
 	@Bean
 	@Primary
-	@Profile("DE")
+	@Profile("de")
 	GreetingService i18nGermanGreetingService(GreetingServiceFactory greetingServiceFactory) {
-		return greetingServiceFactory.createGreetingService("DE");
+		return greetingServiceFactory.createGreetingService("de");
 	}
 }
