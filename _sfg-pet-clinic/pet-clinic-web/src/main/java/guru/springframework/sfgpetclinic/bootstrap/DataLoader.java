@@ -1,9 +1,12 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
+import java.time.LocalDate;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.sfgpetclinic.model.Owner;
+import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Vet;
 import guru.springframework.sfgpetclinic.services.OwnerService;
@@ -25,12 +28,12 @@ public class DataLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		savePetType("Dog");
-		savePetType("Cat");
-		System.out.println("Loaded pet types...");
-
-		saveOwner("Michael", "Weston");
-		saveOwner("Fiona", "Glenanne");
+		PetType dog = savePetType("Dog");
+		PetType cat = savePetType("Cat");
+		System.out.println("Loaded Pet Types...");
+		
+		saveOwner("Michael", "Weston", "123 Brickerel", "Miami", "123456789", initPet("Rosco", dog, LocalDate.now()));
+		saveOwner("Fiona", "Glenanne", "123 Brickerel", "Miami", "123456789", initPet("Just Cat", cat, LocalDate.now()));
 		System.out.println("Loaded Owners...");
 		
 		saveVet("Sam", "Axe");
@@ -38,10 +41,17 @@ public class DataLoader implements CommandLineRunner {
 		System.out.println("Loaded vets...");
 	}
 
-	private Owner saveOwner(String firstName, String lastName) {
+	private Owner saveOwner(String firstName, String lastName, String address, String city, String telephone, Pet... pets) {
 		Owner owner = new Owner();
 		owner.setFirstName(firstName);
 		owner.setLastName(lastName);
+		owner.setAddress(address);
+		owner.setCity(city);
+		owner.setTelephone(telephone);
+		for(Pet pet : pets) {
+			pet.setOwner(owner);
+			owner.getPets().add(pet);
+		}
 		return ownerService.save(owner);
 	}
 	private Vet saveVet(String firstName, String lastName) {
@@ -54,6 +64,13 @@ public class DataLoader implements CommandLineRunner {
 		PetType petType = new PetType();
 		petType.setName(name);
 		return petTypeService.save(petType);
+	}
+	private Pet initPet(String name, PetType petType, LocalDate birthDate) {
+		Pet pet = new Pet();
+		pet.setName(name);
+		pet.setBirthDate(birthDate);
+		pet.setPetType(petType);
+		return pet;
 	}
 
 }
