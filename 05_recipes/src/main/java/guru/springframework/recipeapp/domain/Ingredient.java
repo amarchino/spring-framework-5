@@ -11,11 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Ingredient {
 	
 	@Id
@@ -27,6 +25,8 @@ public class Ingredient {
 	private Recipe recipe;
 	@OneToOne(fetch = FetchType.EAGER)
 	private UnitOfMeasure unit;
+	
+	public Ingredient() {}
 	
 	public Ingredient(String description, BigDecimal quantity, UnitOfMeasure unit) {
 		this.description = description;
