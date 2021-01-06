@@ -10,10 +10,12 @@ import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Speciality;
 import guru.springframework.sfgpetclinic.model.Vet;
+import guru.springframework.sfgpetclinic.model.Visit;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
 import guru.springframework.sfgpetclinic.services.SpecialityService;
 import guru.springframework.sfgpetclinic.services.VetService;
+import guru.springframework.sfgpetclinic.services.VisitService;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -22,12 +24,14 @@ public class DataLoader implements CommandLineRunner {
 	private final VetService vetService;
 	private final PetTypeService petTypeService;
 	private final SpecialityService specialityService;
+	private final VisitService visitService;
 
-	public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService) {
+	public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService, VisitService visitService) {
 		this.ownerService = ownerService;
 		this.vetService = vetService;
 		this.petTypeService = petTypeService;
 		this.specialityService = specialityService;
+		this.visitService = visitService;
 	}
 
 	@Override
@@ -47,9 +51,13 @@ public class DataLoader implements CommandLineRunner {
 		Speciality dentistry = saveSpeciality("Dentistry");
 		System.out.println("Loaded Specialities...");
 		
+		Pet justCat = initPet("Just Cat", cat, LocalDate.now());
 		saveOwner("Michael", "Weston", "123 Brickerel", "Miami", "123456789", initPet("Rosco", dog, LocalDate.now()));
-		saveOwner("Fiona", "Glenanne", "123 Brickerel", "Miami", "123456789", initPet("Just Cat", cat, LocalDate.now()));
+		saveOwner("Fiona", "Glenanne", "123 Brickerel", "Miami", "123456789", justCat);
 		System.out.println("Loaded Owners...");
+		
+		saveVisit("Sneezy Kitty", justCat);
+		System.out.println("Loaded Visits...");
 		
 		saveVet("Sam", "Axe", radiology, surgery);
 		saveVet("Jessie", "Porter", dentistry);
@@ -94,6 +102,13 @@ public class DataLoader implements CommandLineRunner {
 		Speciality speciality = new Speciality();
 		speciality.setDescription(name);
 		return specialityService.save(speciality);
+	}
+	private Visit saveVisit(String description, Pet pet) {
+		Visit visit = new Visit();
+		visit.setDate(LocalDate.now());
+		visit.setDescription(description);
+		visit.setPet(pet);
+		return visitService.save(visit);
 	}
 
 }
