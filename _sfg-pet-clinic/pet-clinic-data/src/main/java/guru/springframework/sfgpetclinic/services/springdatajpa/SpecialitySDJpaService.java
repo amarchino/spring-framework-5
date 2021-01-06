@@ -9,9 +9,9 @@ import guru.springframework.sfgpetclinic.services.SpecialityService;
 
 @Service
 @Profile("springdatajpa")
-public class SpecialityServiceSDJpa extends BaseServiceSDJpa<Speciality, Long, SpecialityRepository> implements SpecialityService {
+public class SpecialitySDJpaService extends BaseSDJpaService<Speciality, Long, SpecialityRepository> implements SpecialityService {
 	
-	public SpecialityServiceSDJpa(SpecialityRepository repository) {
+	public SpecialitySDJpaService(SpecialityRepository repository) {
 		super(repository);
 	}
 

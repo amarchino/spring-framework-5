@@ -7,11 +7,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import guru.springframework.sfgpetclinic.services.CrudService;
 
-public abstract class BaseServiceSDJpa<T, ID, R extends CrudRepository<T, ID>> implements CrudService<T, ID> {
+public abstract class BaseSDJpaService<T, ID, R extends CrudRepository<T, ID>> implements CrudService<T, ID> {
 	
 	protected final R repository;
 	
-	protected BaseServiceSDJpa(R repository) {
+	protected BaseSDJpaService(R repository) {
 		this.repository = repository;
 	}
 	

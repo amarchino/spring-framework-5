@@ -9,9 +9,9 @@ import guru.springframework.sfgpetclinic.services.OwnerService;
 
 @Service
 @Profile("springdatajpa")
-public class OwnerServiceSDJpa extends BaseServiceSDJpa<Owner, Long, OwnerRepository> implements OwnerService {
+public class OwnerSDJpaService extends BaseSDJpaService<Owner, Long, OwnerRepository> implements OwnerService {
 	
-	public OwnerServiceSDJpa(OwnerRepository repository) {
+	public OwnerSDJpaService(OwnerRepository repository) {
 		super(repository);
 	}
 
