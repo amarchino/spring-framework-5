@@ -1,6 +1,8 @@
 package guru.springframework.recipeapp.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +25,24 @@ class CategoryTest {
 
 	@Test
 	void testGetDescription() {
-		fail("Not yet implemented");
+		String description = "Test description";
+		category.setDescription(description);
+		assertEquals(description, category.getDescription());
 	}
 
 	@Test
 	void testGetRecipes() {
-		fail("Not yet implemented");
+		assertNotNull(category.getRecipes());
+		
+		Recipe recipe = new Recipe();
+		recipe.setId(1L);
+		category.getRecipes().add(recipe);
+		recipe = new Recipe();
+		recipe.setId(2L);
+		category.getRecipes().add(recipe);
+		
+		assertFalse(category.getRecipes().isEmpty());
+		assertEquals(2, category.getRecipes().size());
 	}
 
 }
