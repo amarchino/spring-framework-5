@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import guru.springframework.sfgpetclinic.model.Owner;
+import guru.springframework.sfgpetclinic.model.Pet;
+import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 
 class OwnerMapServiceTest {
@@ -53,6 +55,17 @@ class OwnerMapServiceTest {
 	@Test
 	void saveNoId() {
 		Owner owner = Owner.builder().build();
+		service.save(owner);
+		assertNotNull(owner);
+		assertNotNull(owner.getId());
+		assertEquals(2L, owner.getId());
+	}
+	@Test
+	void saveWithPet() {
+		Owner owner = Owner.builder().pets(Set.of(
+			Pet.builder().petType(PetType.builder().name("Dog").build()).build(),
+			Pet.builder().petType(PetType.builder().name("Cat").build()).build()
+		)).build();
 		service.save(owner);
 		assertNotNull(owner);
 		assertNotNull(owner.getId());
