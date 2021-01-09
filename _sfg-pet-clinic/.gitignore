@@ -140,3 +140,5 @@ HELP.md
 # ESLint
 ######################
 .eslintcache
+
+.attach_pid*
