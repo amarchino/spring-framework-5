@@ -23,9 +23,9 @@
 							</div>
 							<div class="col-md-9">
 								<ul>
-									<li>cat one</li>
-									<li>cat two</li>
-									<li>cat three</li>
+									<li th:remove="all">cat one</li>
+									<li th:remove="all">cat two</li>
+									<li th:each="category : ${recipe.categories}" th:text="${category.description}">cat three</li>
 								</ul>
 							</div>
 						</div>
@@ -34,13 +34,13 @@
 								<h5>Prep time:</h5>
 							</div>
 							<div class="col-md-3">
-								<p>30 min</p>
+								<p th:text="${recipe.prepTime + ' min'}">30 min</p>
 							</div>
 							<div class="col-md-3">
 								<h5>Difficulty:</h5>
 							</div>
 							<div class="col-md-3">
-								<p>Easy</p>
+								<p th:text="${recipe.difficulty}">Easy</p>
 							</div>
 						</div>
 						<div class="row">
@@ -48,13 +48,13 @@
 								<h5>Cook time:</h5>
 							</div>
 							<div class="col-md-3">
-								<p>30 min</p>
+								<p th:text="${recipe.cookTime + ' min'}">30 min</p>
 							</div>
 							<div class="col-md-3">
 								<h5>Servings:</h5>
 							</div>
 							<div class="col-md-3">
-								<p>1</p>
+								<p th:text="${recipe.servings}">1</p>
 							</div>
 						</div>
 						<div class="row">
@@ -62,13 +62,15 @@
 								<h5>Source:</h5>
 							</div>
 							<div class="col-md-3">
-								<p>30 min</p>
+								<p th:text="${recipe.source}">30 min</p>
 							</div>
 							<div class="col-md-3">
 								<h5>URL:</h5>
 							</div>
 							<div class="col-md-3">
-								<p>http://www.example.com</p>
+								<p>
+									<a href="#" th:href="${recipe.url}" th:text="${recipe.url}">http://www.example.com</a>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -80,8 +82,8 @@
 					<div class="panel-body">
 						<div class="row">
 							<ul>
-								<li>1 Cup of milk</li>
-								<li>1 Teaspoon of chocolate</li>
+								<li th:remove="all">1 Cup of milk</li>
+								<li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient.quantity.toPlainString()} + ' ' + ${ingredient.unit.description} + ' of ' + ${ingredient.description}">1 Teaspoon of chocolate</li>
 							</ul>
 						</div>
 					</div>
@@ -93,7 +95,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12">
-								<p>
+								<p th:text="${recipe.directions}">
 									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel ante turpis. Aenean id quam arcu. In convallis, velit non sodales consectetur, dui metus suscipit orci, quis aliquet velit ex a nibh. In eget elit id enim vehicula cursus iaculis eu odio. Mauris vel dolor tristique quam venenatis feugiat. Sed varius dolor in purus blandit, et tincidunt libero facilisis. Sed feugiat porta tortor, vitae rhoncus ante suscipit a. Morbi ornare nulla non lorem consectetur viverra.
 									Nam laoreet mauris leo, sit amet rutrum lorem ultrices quis. Etiam tempor tellus vitae arcu porttitor porta sed sit amet nisi. Curabitur ex metus, tincidunt ut nisi ut, vehicula feugiat nunc. Nam lobortis sodales sapien, ut elementum mauris tristique eu. Suspendisse potenti. Nunc sodales, mi vitae elementum semper, mi lacus vulputate leo, a lobortis elit ligula vitae justo. In hac habitasse platea dictumst. Donec dolor massa, ullamcorper vitae tortor ut, semper posuere ipsum. Donec diam nunc, venenatis sed elit in, rhoncus malesuada erat. Curabitur mattis id erat ac commodo. Duis sed enim in elit consectetur semper. Aenean ut sem non magna aliquet pulvinar at quis ipsum. Praesent sit amet dui et ipsum facilisis ornare.
 									Quisque ut velit nec nunc rutrum rutrum. Fusce ac erat est. Vestibulum malesuada fermentum felis vitae elementum. Nulla facilisis nisi tempor, eleifend nisi vitae, faucibus dui. Quisque nec lectus viverra, fermentum enim sagittis, scelerisque lacus. Curabitur non aliquet nunc. Integer euismod augue id gravida ornare.
@@ -111,7 +113,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12">
-								<p>
+								<p th:text="${recipe.note.recipeNote}">
 									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel ante turpis. Aenean id quam arcu. In convallis, velit non sodales consectetur, dui metus suscipit orci, quis aliquet velit ex a nibh. In eget elit id enim vehicula cursus iaculis eu odio. Mauris vel dolor tristique quam venenatis feugiat. Sed varius dolor in purus blandit, et tincidunt libero facilisis. Sed feugiat porta tortor, vitae rhoncus ante suscipit a. Morbi ornare nulla non lorem consectetur viverra.
 									Nam laoreet mauris leo, sit amet rutrum lorem ultrices quis. Etiam tempor tellus vitae arcu porttitor porta sed sit amet nisi. Curabitur ex metus, tincidunt ut nisi ut, vehicula feugiat nunc. Nam lobortis sodales sapien, ut elementum mauris tristique eu. Suspendisse potenti. Nunc sodales, mi vitae elementum semper, mi lacus vulputate leo, a lobortis elit ligula vitae justo. In hac habitasse platea dictumst. Donec dolor massa, ullamcorper vitae tortor ut, semper posuere ipsum. Donec diam nunc, venenatis sed elit in, rhoncus malesuada erat. Curabitur mattis id erat ac commodo. Duis sed enim in elit consectetur semper. Aenean ut sem non magna aliquet pulvinar at quis ipsum. Praesent sit amet dui et ipsum facilisis ornare.
 									Quisque ut velit nec nunc rutrum rutrum. Fusce ac erat est. Vestibulum malesuada fermentum felis vitae elementum. Nulla facilisis nisi tempor, eleifend nisi vitae, faucibus dui. Quisque nec lectus viverra, fermentum enim sagittis, scelerisque lacus. Curabitur non aliquet nunc. Integer euismod augue id gravida ornare.
