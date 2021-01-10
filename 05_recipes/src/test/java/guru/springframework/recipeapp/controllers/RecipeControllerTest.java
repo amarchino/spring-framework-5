@@ -1,5 +1,7 @@
 package guru.springframework.recipeapp.controllers;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,7 +48,7 @@ class RecipeControllerTest {
 	}
 
 	@Test
-	public void testGetNewRecipeForm() throws Exception {
+	public void getNewRecipeForm() throws Exception {
 		mockMvc.perform(get("/recipe/new"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("recipe/recipe-form"))
@@ -54,7 +56,7 @@ class RecipeControllerTest {
 	}
 
 	@Test
-	public void testPostNewRecipeForm() throws Exception {
+	public void postNewRecipeForm() throws Exception {
 		RecipeCommand command = new RecipeCommand();
 		command.setId(2L);
 
@@ -70,7 +72,7 @@ class RecipeControllerTest {
 	}
 
 	@Test
-	public void testGetUpdateView() throws Exception {
+	public void getUpdateView() throws Exception {
 		RecipeCommand command = new RecipeCommand();
 		command.setId(2L);
 
@@ -80,6 +82,14 @@ class RecipeControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("recipe/recipe-form"))
 			.andExpect(model().attributeExists("recipe"));
+	}
+	
+	@Test
+	public void deleteRecipe() throws Exception {
+		mockMvc.perform(get("/recipe/1/delete"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/"));
+		verify(recipeService, times(1)).deleteById(Mockito.anyLong());
 	}
 
 }
