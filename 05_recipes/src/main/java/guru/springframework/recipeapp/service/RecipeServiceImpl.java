@@ -3,9 +3,8 @@ package guru.springframework.recipeapp.service;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.converters.RecipeCommandToRecipe;
@@ -48,6 +47,12 @@ public class RecipeServiceImpl implements RecipeService {
 		Recipe savedRecipe = recipeRepository.save(detachedRecipe);
 		log.debug("Saved RecipeId: " + savedRecipe.getId());
 		return recipeToRecipeCommand.convert(savedRecipe);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public RecipeCommand findCommandById(Long id) {
+		return recipeToRecipeCommand.convert(findById(id));
 	}
 
 }

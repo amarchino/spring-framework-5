@@ -14,7 +14,7 @@ import guru.springframework.recipeapp.commands.UnitOfMeasureCommand;
 import guru.springframework.recipeapp.domain.Ingredient;
 
 public class IngredientToIngredientCommandTest {
-	private static final BigDecimal AMOUNT = new BigDecimal("1");
+	private static final BigDecimal QUANTITY = new BigDecimal("1");
 	private static final String DESCRIPTION = "Cheeseburger";
 	private static final Long ID_VALUE = 1L;
 	private static final Long UOM_ID = 2L;
@@ -41,11 +41,11 @@ public class IngredientToIngredientCommandTest {
 		// given
 		IngredientCommand command = new IngredientCommand();
 		command.setId(ID_VALUE);
-		command.setAmount(AMOUNT);
+		command.setQuantity(QUANTITY);
 		command.setDescription(DESCRIPTION);
 		UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
 		unitOfMeasureCommand.setId(UOM_ID);
-		command.setUnitOfMeasure(unitOfMeasureCommand);
+		command.setUnit(unitOfMeasureCommand);
 
 		// when
 		Ingredient ingredient = converter.convert(command);
@@ -54,7 +54,7 @@ public class IngredientToIngredientCommandTest {
 		assertNotNull(ingredient);
 		assertNotNull(ingredient.getUnit());
 		assertEquals(ID_VALUE, ingredient.getId());
-		assertEquals(AMOUNT, ingredient.getQuantity());
+		assertEquals(QUANTITY, ingredient.getQuantity());
 		assertEquals(DESCRIPTION, ingredient.getDescription());
 		assertEquals(UOM_ID, ingredient.getUnit().getId());
 	}
@@ -64,7 +64,7 @@ public class IngredientToIngredientCommandTest {
 		// given
 		IngredientCommand command = new IngredientCommand();
 		command.setId(ID_VALUE);
-		command.setAmount(AMOUNT);
+		command.setQuantity(QUANTITY);
 		command.setDescription(DESCRIPTION);
 
 		// when
@@ -74,7 +74,7 @@ public class IngredientToIngredientCommandTest {
 		assertNotNull(ingredient);
 		assertNull(ingredient.getUnit());
 		assertEquals(ID_VALUE, ingredient.getId());
-		assertEquals(AMOUNT, ingredient.getQuantity());
+		assertEquals(QUANTITY, ingredient.getQuantity());
 		assertEquals(DESCRIPTION, ingredient.getDescription());
 
 	}

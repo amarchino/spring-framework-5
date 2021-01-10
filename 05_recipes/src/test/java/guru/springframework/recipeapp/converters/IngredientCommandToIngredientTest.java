@@ -16,7 +16,7 @@ import guru.springframework.recipeapp.domain.UnitOfMeasure;
 
 public class IngredientCommandToIngredientTest {
 	private static final Recipe RECIPE = new Recipe();
-	private static final BigDecimal AMOUNT = new BigDecimal("1");
+	private static final BigDecimal QUANTITY = new BigDecimal("1");
 	private static final String DESCRIPTION = "Cheeseburger";
 	private static final Long UOM_ID = 2L;
 	private static final Long ID_VALUE = 1L;
@@ -44,16 +44,16 @@ public class IngredientCommandToIngredientTest {
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
 		ingredient.setRecipe(RECIPE);
-		ingredient.setQuantity(AMOUNT);
+		ingredient.setQuantity(QUANTITY);
 		ingredient.setDescription(DESCRIPTION);
 		ingredient.setUnit(null);
 		// when
 		IngredientCommand ingredientCommand = converter.convert(ingredient);
 		// then
-		assertNull(ingredientCommand.getUnitOfMeasure());
+		assertNull(ingredientCommand.getUnit());
 		assertEquals(ID_VALUE, ingredientCommand.getId());
 		// assertEquals(RECIPE, ingredientCommand.get);
-		assertEquals(AMOUNT, ingredientCommand.getAmount());
+		assertEquals(QUANTITY, ingredientCommand.getQuantity());
 		assertEquals(DESCRIPTION, ingredientCommand.getDescription());
 	}
 
@@ -63,7 +63,7 @@ public class IngredientCommandToIngredientTest {
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
 		ingredient.setRecipe(RECIPE);
-		ingredient.setQuantity(AMOUNT);
+		ingredient.setQuantity(QUANTITY);
 		ingredient.setDescription(DESCRIPTION);
 
 		UnitOfMeasure uom = new UnitOfMeasure();
@@ -74,10 +74,9 @@ public class IngredientCommandToIngredientTest {
 		IngredientCommand ingredientCommand = converter.convert(ingredient);
 		// then
 		assertEquals(ID_VALUE, ingredientCommand.getId());
-		assertNotNull(ingredientCommand.getUnitOfMeasure());
-		assertEquals(UOM_ID, ingredientCommand.getUnitOfMeasure().getId());
-		// assertEquals(RECIPE, ingredientCommand.get);
-		assertEquals(AMOUNT, ingredientCommand.getAmount());
+		assertNotNull(ingredientCommand.getUnit());
+		assertEquals(UOM_ID, ingredientCommand.getUnit().getId());
+		assertEquals(QUANTITY, ingredientCommand.getQuantity());
 		assertEquals(DESCRIPTION, ingredientCommand.getDescription());
 	}
 }
