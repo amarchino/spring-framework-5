@@ -17,17 +17,21 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import guru.springframework.recipeapp.converters.RecipeCommandToRecipe;
+import guru.springframework.recipeapp.converters.RecipeToRecipeCommand;
 import guru.springframework.recipeapp.domain.Recipe;
 import guru.springframework.recipeapp.repositories.RecipeRepository;
 
 class RecipeServiceImplTest {
 	RecipeServiceImpl recipeServiceImpl;
 	@Mock RecipeRepository recipeRepository;
+	@Mock RecipeToRecipeCommand recipeToRecipeCommand;
+    @Mock RecipeCommandToRecipe recipeCommandToRecipe;
 	
 	@BeforeEach
 	public void setUp() throws Exception {
 		try(AutoCloseable mocks = MockitoAnnotations.openMocks(this)) {
-			recipeServiceImpl = new RecipeServiceImpl(recipeRepository);
+			recipeServiceImpl = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
 		}
 	}
 
