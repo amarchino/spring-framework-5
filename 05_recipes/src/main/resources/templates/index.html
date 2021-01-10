@@ -3,13 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Title</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"
-		th:href="@{/webjars/bootstrap/3.4.1/css/bootstrap.min.css}">
-	<script src="https://code.jquery.com/jquery-1.11.1.min.js" integrity="sha384-UM1JrZIpBwVf5jj9dTKVvGiiZPZTLVoq4sfdvIe9SBumsvCuv6AHDNtEiIb5h1kU" crossorigin="anonymous" defer
-		th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous" defer
-		th:src="@{/webjars/bootstrap/3.4.1/js/bootstrap.min.js}"></script>
+	<title>Show Recipes</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous" th:href="@{/webjars/bootstrap/3.4.1/css/bootstrap.min.css}">
+	<script src="https://code.jquery.com/jquery-1.11.1.min.js" crossorigin="anonymous" defer th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous" defer th:src="@{/webjars/bootstrap/3.4.1/js/bootstrap.min.js}"></script>
 </head>
 <body>
 	<div class="container-fluid" style="margin-top: 28px">
@@ -26,20 +23,24 @@
 									<tr>
 										<th>ID</th>
 										<th>Description</th>
+										<th>View</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:remove="all">
-										<th th:text="${recipe.id}">123</th>
-										<th th:text="${recipe.description}">Tasty Goodness 1</th>
+										<td>123</td>
+										<td>Tasty Goodness 1</td>
+										<td><a href="#">View</a></td>
 									</tr>
 									<tr th:remove="all">
-										<th th:text="${recipe.id}">123</th>
-										<th th:text="${recipe.description}">Tasty Goodness 2</th>
+										<td>123</td>
+										<td>Tasty Goodness 2</td>
+										<td><a href="#">View</a></td>
 									</tr>
 									<tr th:each="recipe : ${recipes}">
 										<td th:text="${recipe.id}">123</td>
 										<td th:text="${recipe.description}">Tasty Goodness 3</td>
+										<td><a href="#" th:href="@{'/recipe/show/'+${recipe.id}}">View</a></td>
 									</tr>
 								</tbody>
 							</table>
