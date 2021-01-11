@@ -17,10 +17,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Recipe {
 
 	@Id
@@ -42,9 +48,11 @@ public class Recipe {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Note note;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+	@Builder.Default
 	private Set<Ingredient> ingredients = new HashSet<>();
 	@ManyToMany
 	@JoinTable(name="recipe_category", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	@Builder.Default
 	private Set<Category> categories = new HashSet<>();
 
 	public void setNote(Note note) {

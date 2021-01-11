@@ -9,11 +9,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category {
 
 	@Id
@@ -22,6 +28,7 @@ public class Category {
 	private String description;
 	@ManyToMany(mappedBy = "categories")
 	@EqualsAndHashCode.Exclude
+	@Builder.Default
 	private Set<Recipe> recipes = new HashSet<>();
 
 }

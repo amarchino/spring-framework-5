@@ -10,72 +10,98 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import guru.springframework.recipeapp.commands.IngredientCommand;
-import guru.springframework.recipeapp.commands.UnitOfMeasureCommand;
 import guru.springframework.recipeapp.domain.Ingredient;
+import guru.springframework.recipeapp.domain.Recipe;
+import guru.springframework.recipeapp.domain.UnitOfMeasure;
 
 public class IngredientToIngredientCommandTest {
+	private static final Recipe RECIPE = new Recipe();
 	private static final BigDecimal QUANTITY = new BigDecimal("1");
 	private static final String DESCRIPTION = "Cheeseburger";
-	private static final Long ID_VALUE = 1L;
 	private static final Long UOM_ID = 2L;
+	private static final Long ID_VALUE = 1L;
+	private static final Long RECIPE_ID = 3L;
 
-	private IngredientCommandToIngredient converter;
+	private IngredientToIngredientCommand converter;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		converter = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
+		converter = new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand());
+		RECIPE.setId(RECIPE_ID);
 	}
 
 	@Test
-	public void testNullObject() throws Exception {
+	public void testNullConvert() throws Exception {
 		assertNull(converter.convert(null));
 	}
 
 	@Test
 	public void testEmptyObject() throws Exception {
-		assertNotNull(converter.convert(new IngredientCommand()));
+		assertNotNull(converter.convert(new Ingredient()));
 	}
 
 	@Test
-	public void convert() throws Exception {
+	public void testConvertNullUOM() throws Exception {
 		// given
-		IngredientCommand command = new IngredientCommand();
-		command.setId(ID_VALUE);
-		command.setQuantity(QUANTITY);
-		command.setDescription(DESCRIPTION);
-		UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
-		unitOfMeasureCommand.setId(UOM_ID);
-		command.setUnit(unitOfMeasureCommand);
-
+		Ingredient ingredient = new Ingredient();
+		ingredient.setId(ID_VALUE);
+		ingredient.setRecipe(RECIPE);
+		ingredient.setQuantity(QUANTITY);
+		ingredient.setDescription(DESCRIPTION);
+		ingredient.setUnit(null);
 		// when
-		Ingredient ingredient = converter.convert(command);
-
+		IngredientCommand ingredientCommand = converter.convert(ingredient);
 		// then
-		assertNotNull(ingredient);
-		assertNotNull(ingredient.getUnit());
-		assertEquals(ID_VALUE, ingredient.getId());
-		assertEquals(QUANTITY, ingredient.getQuantity());
-		assertEquals(DESCRIPTION, ingredient.getDescription());
-		assertEquals(UOM_ID, ingredient.getUnit().getId());
+		assertNull(ingredientCommand.getUnit());
+		assertEquals(ID_VALUE, ingredientCommand.getId());
+		// assertEquals(RECIPE, ingredientCommand.get);
+		assertEquals(QUANTITY, ingredientCommand.getQuantity());
+		assertEquals(DESCRIPTION, ingredientCommand.getDescription());
 	}
 
 	@Test
-	public void convertWithNullUOM() throws Exception {
+	public void testConvertWithUom() throws Exception {
 		// given
-		IngredientCommand command = new IngredientCommand();
-		command.setId(ID_VALUE);
-		command.setQuantity(QUANTITY);
-		command.setDescription(DESCRIPTION);
+		Ingredient ingredient = new Ingredient();
+		ingredient.setId(ID_VALUE);
+		ingredient.setRecipe(RECIPE);
+		ingredient.setQuantity(QUANTITY);
+		ingredient.setDescription(DESCRIPTION);
 
+		UnitOfMeasure uom = new UnitOfMeasure();
+		uom.setId(UOM_ID);
+
+		ingredient.setUnit(uom);
 		// when
-		Ingredient ingredient = converter.convert(command);
-
+		IngredientCommand ingredientCommand = converter.convert(ingredient);
 		// then
-		assertNotNull(ingredient);
-		assertNull(ingredient.getUnit());
-		assertEquals(ID_VALUE, ingredient.getId());
-		assertEquals(QUANTITY, ingredient.getQuantity());
-		assertEquals(DESCRIPTION, ingredient.getDescription());
+		assertEquals(ID_VALUE, ingredientCommand.getId());
+		assertNotNull(ingredientCommand.getUnit());
+		assertEquals(UOM_ID, ingredientCommand.getUnit().getId());
+		assertEquals(QUANTITY, ingredientCommand.getQuantity());
+		assertEquals(DESCRIPTION, ingredientCommand.getDescription());
+	}
+	
+	@Test
+	public void testConvertNullRecipe() throws Exception {
+		// given
+		Ingredient ingredient = new Ingredient();
+		ingredient.setRecipe(null);
+		// when
+		IngredientCommand ingredientCommand = converter.convert(ingredient);
+		// then
+		assertNull(ingredientCommand.getRecipeId());
+	}
 
+	@Test
+	public void testConvertWithRecipe() throws Exception {
+		// given
+		Ingredient ingredient = new Ingredient();
+		ingredient.setRecipe(RECIPE);
+		
+		// when
+		IngredientCommand ingredientCommand = converter.convert(ingredient);
+		// then
+		assertEquals(RECIPE_ID, ingredientCommand.getRecipeId());
 	}
 }
