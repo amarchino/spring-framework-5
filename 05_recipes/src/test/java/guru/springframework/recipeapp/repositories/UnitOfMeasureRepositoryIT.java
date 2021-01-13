@@ -21,7 +21,7 @@ import guru.springframework.recipeapp.domain.UnitOfMeasure;
 @DataJpaTest
 class UnitOfMeasureRepositoryIT {
 	
-	@Autowired UnitOfMeasureRepository unitOfMeasureRepository;
+	@Autowired UnitOfMeasureRepository uomOfMeasureRepository;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -29,28 +29,28 @@ class UnitOfMeasureRepositoryIT {
 
 	@Test
 	void testFindByDescription() {
-		Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findByDescription("Teaspoon");
+		Optional<UnitOfMeasure> uom = uomOfMeasureRepository.findByDescription("Teaspoon");
 		assertTrue(uom.isPresent());
 		assertEquals("Teaspoon", uom.get().getDescription());
 	}
 	
 	@Test
 	void testFindByDescriptionCup() {
-		String unitOfMeasure = "Cup";
-		Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findByDescription(unitOfMeasure);
+		String uomOfMeasure = "Cup";
+		Optional<UnitOfMeasure> uom = uomOfMeasureRepository.findByDescription(uomOfMeasure);
 		assertTrue(uom.isPresent());
-		assertEquals(unitOfMeasure, uom.get().getDescription());
+		assertEquals(uomOfMeasure, uom.get().getDescription());
 	}
 	
 	@Test
 	void testFindByDescriptionNotFound() {
-		Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findByDescription("Teaspoons");
+		Optional<UnitOfMeasure> uom = uomOfMeasureRepository.findByDescription("Teaspoons");
 		assertFalse(uom.isPresent());
 	}
 	@Test
 	
 	void testFindByDescriptionNotFoundException() {
-		Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findByDescription("Teaspoons");
+		Optional<UnitOfMeasure> uom = uomOfMeasureRepository.findByDescription("Teaspoons");
 		assertThrows(NoSuchElementException.class, () -> uom.get());
 	}
 

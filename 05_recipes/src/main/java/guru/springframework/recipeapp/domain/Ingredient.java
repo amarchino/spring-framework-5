@@ -27,17 +27,17 @@ public class Ingredient {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String description;
-	private BigDecimal quantity;
+	private BigDecimal amount;
 	@ManyToOne
 	@EqualsAndHashCode.Exclude
 	private Recipe recipe;
 	@OneToOne(fetch = FetchType.EAGER)
-	private UnitOfMeasure unit;
+	private UnitOfMeasure uom;
 	
-	public Ingredient(String description, BigDecimal quantity, UnitOfMeasure unit) {
+	public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom) {
 		this.description = description;
-		this.quantity = quantity;
-		this.unit = unit;
+		this.amount = amount;
+		this.uom = uom;
 	}
 
 }

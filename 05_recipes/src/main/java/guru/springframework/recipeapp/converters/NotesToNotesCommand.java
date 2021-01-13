@@ -4,23 +4,23 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import guru.springframework.recipeapp.commands.NoteCommand;
-import guru.springframework.recipeapp.domain.Note;
+import guru.springframework.recipeapp.commands.NotesCommand;
+import guru.springframework.recipeapp.domain.Notes;
 import lombok.Synchronized;
 
 @Component
-public class NoteToNoteCommand implements Converter<Note, NoteCommand> {
+public class NotesToNotesCommand implements Converter<Notes, NotesCommand> {
 
 	@Override
 	@Synchronized
 	@Nullable
-	public NoteCommand convert(Note source) {
+	public NotesCommand convert(Notes source) {
 		if(source == null) {
 			return null;
 		}
-		final NoteCommand noteCommand = new NoteCommand();
+		final NotesCommand noteCommand = new NotesCommand();
 		noteCommand.setId(source.getId());
-		noteCommand.setRecipeNote(source.getRecipeNote());
+		noteCommand.setRecipeNotes(source.getRecipeNotes());
 		return noteCommand;
 	}
 

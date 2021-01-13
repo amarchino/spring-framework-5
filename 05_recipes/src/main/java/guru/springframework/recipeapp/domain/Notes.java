@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Note {
+public class Notes {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Lob
-	private String recipeNote;
+	private String recipeNotes;
 	@OneToOne
 	@EqualsAndHashCode.Exclude
 	private Recipe recipe;

@@ -11,7 +11,7 @@ import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.domain.Category;
 import guru.springframework.recipeapp.domain.Difficulty;
 import guru.springframework.recipeapp.domain.Ingredient;
-import guru.springframework.recipeapp.domain.Note;
+import guru.springframework.recipeapp.domain.Notes;
 import guru.springframework.recipeapp.domain.Recipe;
 
 public class RecipeToRecipeCommandTest {
@@ -35,7 +35,7 @@ public class RecipeToRecipeCommandTest {
 	public void setUp() throws Exception {
 		converter = new RecipeToRecipeCommand(
 				new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand()),
-				new NoteToNoteCommand(),
+				new NotesToNotesCommand(),
 				new CategoryToCategoryCommand());
 	}
 
@@ -63,10 +63,10 @@ public class RecipeToRecipeCommandTest {
 		recipe.setSource(SOURCE);
 		recipe.setUrl(URL);
 
-		Note notes = new Note();
+		Notes notes = new Notes();
 		notes.setId(NOTES_ID);
 
-		recipe.setNote(notes);
+		recipe.setNotes(notes);
 
 		Category category = new Category();
 		category.setId(CAT_ID_1);
@@ -100,7 +100,7 @@ public class RecipeToRecipeCommandTest {
 		assertEquals(SERVINGS, command.getServings());
 		assertEquals(SOURCE, command.getSource());
 		assertEquals(URL, command.getUrl());
-		assertEquals(NOTES_ID, command.getNote().getId());
+		assertEquals(NOTES_ID, command.getNotes().getId());
 		assertEquals(2, command.getCategories().size());
 		assertEquals(2, command.getIngredients().size());
 

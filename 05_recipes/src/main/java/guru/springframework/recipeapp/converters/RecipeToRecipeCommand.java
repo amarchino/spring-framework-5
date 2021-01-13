@@ -14,10 +14,10 @@ import lombok.Synchronized;
 public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 	
 	private final IngredientToIngredientCommand ingredientConverter;
-	private final NoteToNoteCommand noteConverter;
+	private final NotesToNotesCommand noteConverter;
 	private final CategoryToCategoryCommand categoryConverter;
 	
-	public RecipeToRecipeCommand(IngredientToIngredientCommand ingredientConverter, NoteToNoteCommand noteConverter, CategoryToCategoryCommand categoryConverter) {
+	public RecipeToRecipeCommand(IngredientToIngredientCommand ingredientConverter, NotesToNotesCommand noteConverter, CategoryToCategoryCommand categoryConverter) {
 		this.ingredientConverter = ingredientConverter;
 		this.noteConverter = noteConverter;
 		this.categoryConverter = categoryConverter;
@@ -41,7 +41,7 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 		recipeCommand.setUrl(source.getUrl());
 		recipeCommand.setDirections(source.getDirections());
 		recipeCommand.setDifficulty(source.getDifficulty());
-		recipeCommand.setNote(noteConverter.convert(source.getNote()));
+		recipeCommand.setNotes(noteConverter.convert(source.getNotes()));
 		if(source.getIngredients() != null && !source.getIngredients().isEmpty()) {
 			recipeCommand.setIngredients(source.getIngredients().stream().map(ingredientConverter::convert).collect(Collectors.toSet()));
 		}

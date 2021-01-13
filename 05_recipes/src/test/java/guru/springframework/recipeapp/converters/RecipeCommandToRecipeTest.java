@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import guru.springframework.recipeapp.commands.CategoryCommand;
 import guru.springframework.recipeapp.commands.IngredientCommand;
-import guru.springframework.recipeapp.commands.NoteCommand;
+import guru.springframework.recipeapp.commands.NotesCommand;
 import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.domain.Difficulty;
 import guru.springframework.recipeapp.domain.Recipe;
@@ -36,7 +36,7 @@ public class RecipeCommandToRecipeTest {
 	public void setUp() throws Exception {
 		converter = new RecipeCommandToRecipe(
 				new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure()),
-				new NoteCommandToNote(),
+				new NotesCommandToNotes(),
 				new CategoryCommandToCategory());
 	}
 
@@ -64,10 +64,10 @@ public class RecipeCommandToRecipeTest {
 		recipeCommand.setSource(SOURCE);
 		recipeCommand.setUrl(URL);
 
-		NoteCommand notes = new NoteCommand();
+		NotesCommand notes = new NotesCommand();
 		notes.setId(NOTES_ID);
 
-		recipeCommand.setNote(notes);
+		recipeCommand.setNotes(notes);
 
 		CategoryCommand category = new CategoryCommand();
 		category.setId(CAT_ID_1);
@@ -100,7 +100,7 @@ public class RecipeCommandToRecipeTest {
 		assertEquals(SERVINGS, recipe.getServings());
 		assertEquals(SOURCE, recipe.getSource());
 		assertEquals(URL, recipe.getUrl());
-		assertEquals(NOTES_ID, recipe.getNote().getId());
+		assertEquals(NOTES_ID, recipe.getNotes().getId());
 		assertEquals(2, recipe.getCategories().size());
 		assertEquals(2, recipe.getIngredients().size());
 	}

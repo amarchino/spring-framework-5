@@ -94,7 +94,7 @@
 								<ul>
 									<li th:remove="all">1 Cup of Milk</li>
 									<li th:remove="all">1 Teaspoon of Chocolate</li>
-									<li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient.quantity.toPlainString()} + ' ' + ${ingredient.unit.description} + ' of ' + ${ingredient.description}">1 Teaspoon of Sugar</li>
+									<li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient.amount.toPlainString()} + ' ' + ${ingredient.uom.description} + ' of ' + ${ingredient.description}">1 Teaspoon of Sugar</li>
 								</ul>
 							</div>
 						</div>
@@ -118,7 +118,7 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-12 form-group">
-									<textarea rows="3" class="form-control" th:field="*{note.recipeNote}"></textarea>
+									<textarea rows="3" class="form-control" th:field="*{notes.recipeNotes}"></textarea>
 								</div>
 							</div>
 						</div>

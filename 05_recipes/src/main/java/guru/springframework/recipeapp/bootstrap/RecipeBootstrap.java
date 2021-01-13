@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import guru.springframework.recipeapp.domain.Category;
 import guru.springframework.recipeapp.domain.Difficulty;
 import guru.springframework.recipeapp.domain.Ingredient;
-import guru.springframework.recipeapp.domain.Note;
+import guru.springframework.recipeapp.domain.Notes;
 import guru.springframework.recipeapp.domain.Recipe;
 import guru.springframework.recipeapp.domain.UnitOfMeasure;
 import guru.springframework.recipeapp.repositories.CategoryRepository;
@@ -25,15 +25,15 @@ import lombok.extern.slf4j.Slf4j;
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	
 	private final CategoryRepository categoryRepository;
-	private final UnitOfMeasureRepository unitOfMeasureRepository;
+	private final UnitOfMeasureRepository uomOfMeasureRepository;
 	private final RecipeRepository recipeRepository;
 
-	public RecipeBootstrap(CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository, RecipeRepository recipeRepository) {
+	public RecipeBootstrap(CategoryRepository categoryRepository, UnitOfMeasureRepository uomOfMeasureRepository, RecipeRepository recipeRepository) {
 		this.categoryRepository = categoryRepository;
-		this.unitOfMeasureRepository = unitOfMeasureRepository;
+		this.uomOfMeasureRepository = uomOfMeasureRepository;
 		this.recipeRepository = recipeRepository;
 	}
-	
+
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -75,12 +75,12 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 				+ "\n"
 				+ "4 Serve: Serve immediately, or if making a few hours ahead, place plastic wrap on the surface of the guacamole and press down to cover it and to prevent air reaching it. (The oxygen in the air causes oxidation which will turn the guacamole brown.) Refrigerate until ready to serve.");
 		
-		Note guacamoleNote = new Note();
-		guacamoleNote.setRecipeNote("For a very quick guacamole just take a 1/4 cup of salsa and mix it in with your mashed avocados.\n"
+		Notes guacamoleNote = new Notes();
+		guacamoleNote.setRecipeNotes("For a very quick guacamole just take a 1/4 cup of salsa and mix it in with your mashed avocados.\n"
 				+ "Once you have basic guacamole down, feel free to experiment with variations including strawberries, peaches, pineapple, mangoes, even watermelon. One classic Mexican guacamole has pomegranate seeds and chunks of peaches in it (a Diana Kennedy favorite). You can get creative with homemade guacamole!\n"
 				+ "The simplest version of guacamole is just mashed avocados with salt. Don’t let the lack of availability of other ingredients stop you from making guacamole.\n"
 				+ "To extend a limited supply of avocados, add either sour cream or cottage cheese to your guacamole dip. Purists may be horrified, but so what? It tastes great.");
-		guacamole.setNote(guacamoleNote);
+		guacamole.setNotes(guacamoleNote);
 		
 		guacamole.addIngredient(new Ingredient("Ripe avocados", new BigDecimal(2), eachUom));
 		guacamole.addIngredient(new Ingredient("Salt", new BigDecimal("0.25"), teaspoonUom));
@@ -118,13 +118,13 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 				+ "\n"
 				+ "5 Assemble the tacos: Slice the chicken into strips. On each tortilla, place a small handful of arugula. Top with chicken slices, sliced avocado, radishes, tomatoes, and onion slices. Drizzle with the thinned sour cream. Serve with lime wedges");
 		
-		Note tacosNote = new Note();
-		tacosNote.setRecipeNote("We have a family motto and it is this: Everything goes better in a tortilla.\n"
+		Notes tacosNote = new Notes();
+		tacosNote.setRecipeNotes("We have a family motto and it is this: Everything goes better in a tortilla.\n"
 				+ "Any and every kind of leftover can go inside a warm tortilla, usually with a healthy dose of pickled jalapenos. I can always sniff out a late-night snacker when the aroma of tortillas heating in a hot pan on the stove comes wafting through the house.\n"
 				+ "Today’s tacos are more purposeful – a deliberate meal instead of a secretive midnight snack!\n"
 				+ "First, I marinate the chicken briefly in a spicy paste of ancho chile powder, oregano, cumin, and sweet orange juice while the grill is heating. You can also use this time to prepare the taco toppings.\n"
 				+ "Grill the chicken, then let it rest while you warm the tortillas. Now you are ready to assemble the tacos and dig in. The whole meal comes together in about 30 minutes!");
-		tacos.setNote(tacosNote);
+		tacos.setNotes(tacosNote);
 		
 		tacos.addIngredient(new Ingredient("Ancho chili powder", new BigDecimal(2), tablespoonUom));
 		tacos.addIngredient(new Ingredient("Dried oregano", new BigDecimal(1), teaspoonUom));
@@ -156,7 +156,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 	
 	private UnitOfMeasure getUnitOfMeasure(String description) {
-		return unitOfMeasureRepository.findByDescription(description).orElseThrow(() -> new RuntimeException("Expected Unit of Measure \"" + description + "\" not found"));
+		return uomOfMeasureRepository.findByDescription(description).orElseThrow(() -> new RuntimeException("Expected Unit of Measure \"" + description + "\" not found"));
 	}
 	private Category getCategory(String description) {
 		return categoryRepository.findByDescription(description).orElseThrow(() -> new RuntimeException("Expected Category \"" + description + "\" not found"));

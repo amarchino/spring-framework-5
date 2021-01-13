@@ -46,7 +46,7 @@ public class Recipe {
 	@Enumerated(EnumType.STRING)
 	private Difficulty difficulty;
 	@OneToOne(cascade = CascadeType.ALL)
-	private Note note;
+	private Notes notes;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
 	@Builder.Default
 	private Set<Ingredient> ingredients = new HashSet<>();
@@ -55,10 +55,10 @@ public class Recipe {
 	@Builder.Default
 	private Set<Category> categories = new HashSet<>();
 
-	public void setNote(Note note) {
-		this.note = note;
-		if(note != null) {
-			note.setRecipe(this);
+	public void setNotes(Notes notes) {
+		this.notes = notes;
+		if(notes != null) {
+			notes.setRecipe(this);
 		}
 	}
 	public Recipe addIngredient(Ingredient ingredient) {

@@ -18,10 +18,10 @@ public class UnitOfMeasureToUnitOfMeasureCommand implements Converter<UnitOfMeas
 		if(source == null) {
 			return null;
 		}
-		final UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
-		unitOfMeasureCommand.setId(source.getId());
-		unitOfMeasureCommand.setDescription(source.getDescription());
-		return unitOfMeasureCommand;
+		final UnitOfMeasureCommand uomOfMeasureCommand = new UnitOfMeasureCommand();
+		uomOfMeasureCommand.setId(source.getId());
+		uomOfMeasureCommand.setDescription(source.getDescription());
+		return uomOfMeasureCommand;
 	}
 
 }

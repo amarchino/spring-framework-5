@@ -13,6 +13,6 @@ public class IngredientCommand {
 	private Long id;
 	private Long recipeId;
 	private String description;
-	private BigDecimal quantity;
-	private UnitOfMeasureCommand unit;
+	private BigDecimal amount;
+	private UnitOfMeasureCommand uom;
 }
