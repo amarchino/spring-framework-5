@@ -99,7 +99,7 @@ class IngredientControllerTest {
 		when(uomOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
 		
 		// When
-		mockMvc.perform(get("/recipe/1/ingredient/2/new"))
+		mockMvc.perform(get("/recipe/1/ingredient/new"))
 		// Then
 			.andExpect(status().isOk())
 			.andExpect(view().name("recipe/ingredient/ingredient-form"))
@@ -129,4 +129,11 @@ class IngredientControllerTest {
 			.andExpect(view().name("redirect:/recipe/2/ingredient/3/show"));
 	}
 
+	@Test
+	void deleteIngredient() throws Exception {
+		mockMvc.perform(get("/recipe/2/ingredient/3/delete"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/recipe/2/ingredients"));
+		verify(ingredientService, times(1)).deleteById(Mockito.anyLong(), Mockito.anyLong());
+	}
 }

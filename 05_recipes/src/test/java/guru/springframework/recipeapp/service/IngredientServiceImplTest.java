@@ -89,4 +89,17 @@ class IngredientServiceImplTest {
 		verify(recipeRepository, times(1)).save(Mockito.any(Recipe.class));
 	}
 
+	@Test
+	void deleteById() {
+		// Given
+		Recipe recipe = Recipe.builder().id(1L).build();
+		recipe.addIngredient(Ingredient.builder().id(3L).build());
+		when(recipeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(recipe));
+		
+		// When
+		ingredientService.deleteById(1L, 3L);
+		// Then
+		verify(recipeRepository, times(1)).findById(Mockito.anyLong());
+		verify(recipeRepository, times(1)).save(Mockito.any(Recipe.class));
+	}
 }
