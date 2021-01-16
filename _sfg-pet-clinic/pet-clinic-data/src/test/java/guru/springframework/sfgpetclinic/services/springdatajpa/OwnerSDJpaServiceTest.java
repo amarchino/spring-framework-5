@@ -10,6 +10,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,6 +49,19 @@ class OwnerSDJpaServiceTest {
 		assertEquals(1L, owner.getId());
 		
 		verify(ownerRepository, times(1)).findByLastName(anyString());
+	}
+	
+	@Test
+	void findAllByLastNameLike() {
+		when(ownerRepository.findAllByLastNameLike(any())).thenReturn(Arrays.asList(returnOwner));
+		List<Owner> owners = service.findAllByLastNameLike(LAST_NAME);
+		assertNotNull(owners);
+		assertEquals(1, owners.size());
+		Owner owner = owners.get(0);
+		assertEquals(LAST_NAME, owner.getLastName());
+		assertEquals(1L, owner.getId());
+		
+		verify(ownerRepository, times(1)).findAllByLastNameLike(anyString());
 	}
 
 	@Test

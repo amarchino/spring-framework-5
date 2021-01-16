@@ -7,6 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.hamcrest.Matchers;
@@ -42,30 +45,39 @@ class OwnerControllerTest {
 	}
 
 	@Test
-	void listOwners() throws Exception {
-		when(ownerService.findAll()).thenReturn(owners);
-		mockMvc.perform(get("/owners"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("owners/index"))
-			.andExpect(model().attribute("owners", Matchers.hasSize(2)));
-	}
-	
-	@Test
-	void listOwnersByIndex() throws Exception {
-		when(ownerService.findAll()).thenReturn(owners);
-		mockMvc.perform(get("/owners/index"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("owners/index"))
-			.andExpect(model().attribute("owners", Matchers.hasSize(2)));
-	}
-
-	@Test
 	void findOwners() throws Exception {
 		mockMvc.perform(get("/owners/find"))
-			.andExpect(view().name("notImplemented"));
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/findOwners"))
+			.andExpect(model().attributeExists("owner"));
 		verifyNoInteractions(ownerService);
 	}
 	
+	@Test
+	void processFindOwnersReturnMany() throws Exception {
+		when(ownerService.findAllByLastNameLike(Mockito.anyString())).thenReturn(new ArrayList<>(owners));
+		
+		mockMvc.perform(get("/owners"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/ownersList"))
+			.andExpect(model().attribute("selections", Matchers.hasSize(2)));
+	}
+	@Test
+	void processFindOwnersReturnOne() throws Exception {
+		when(ownerService.findAllByLastNameLike(Mockito.anyString())).thenReturn(Arrays.asList(Owner.builder().id(1L).build()));
+		
+		mockMvc.perform(get("/owners"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/1"));
+	}
+	@Test
+	void processFindOwnersReturnZero() throws Exception {
+		when(ownerService.findAllByLastNameLike(Mockito.anyString())).thenReturn(List.of());
+		
+		mockMvc.perform(get("/owners"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/findOwners"));
+	}
 	@Test
 	void showOwner() throws Exception {
 		when(ownerService.findById(Mockito.anyLong())).thenReturn(Owner.builder().id(1L).build());

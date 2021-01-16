@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,15 @@ class OwnerMapServiceTest {
 		assertNotNull(owner);
 		assertEquals(lastName, owner.getLastName());
 		assertEquals(ownerId, owner.getId());
+	}
+	@Test
+	void findAllByLastNameLike() {
+		List<Owner> owners = service.findAllByLastNameLike(lastName);
+		assertNotNull(owners);
+		assertEquals(1, owners.size());
+		Owner owner = owners.get(0);
+		assertEquals(lastName, owner.getLastName());
+		assertEquals(1L, owner.getId());
 	}
 	@Test
 	void findByLastNameNotFound() {

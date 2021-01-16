@@ -1,5 +1,7 @@
 package guru.springframework.sfgpetclinic.services.springdatajpa;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,11 @@ public class OwnerSDJpaService extends BaseSDJpaService<Owner, Long, OwnerReposi
 	@Override
 	public Owner findByLastName(String lastName) {
 		return repository.findByLastName(lastName);
+	}
+
+	@Override
+	public List<Owner> findAllByLastNameLike(String lastName) {
+		return repository.findAllByLastNameLike(lastName);
 	}
 
 }
