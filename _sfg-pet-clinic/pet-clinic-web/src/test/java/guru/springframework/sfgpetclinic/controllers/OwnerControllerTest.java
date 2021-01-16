@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -59,10 +60,19 @@ class OwnerControllerTest {
 	}
 
 	@Test
-	void testFindOwners() throws Exception {
+	void findOwners() throws Exception {
 		mockMvc.perform(get("/owners/find"))
 			.andExpect(view().name("notImplemented"));
 		verifyNoInteractions(ownerService);
+	}
+	
+	@Test
+	void showOwner() throws Exception {
+		when(ownerService.findById(Mockito.anyLong())).thenReturn(Owner.builder().id(1L).build());
+		mockMvc.perform(get("/owners/1"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/ownerDetails"))
+			.andExpect(model().attribute("owner", Matchers.hasProperty("id", Matchers.is(1L))));
 	}
 
 }
