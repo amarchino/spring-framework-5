@@ -37,4 +37,23 @@ public class Owner extends Person {
 	@Builder.Default
 	private Set<Pet> pets = new HashSet<>();
 
+	public Pet getPet(String name) {
+		return getPet(name, false);
+	}
+	public Pet getPet(String name, boolean ignoreNew) {
+		for(Pet pet : pets) {
+			if(!ignoreNew || !pet.isNew()) {
+				if(pet.getName().equalsIgnoreCase(name)) {
+					return pet;
+				}
+			}
+		}
+		return null;
+	}
+	public void addPet(Pet pet) {
+		pet.setOwner(this);
+		if(pet.isNew()) {
+			pets.add(pet);
+		}
+	}
 }
