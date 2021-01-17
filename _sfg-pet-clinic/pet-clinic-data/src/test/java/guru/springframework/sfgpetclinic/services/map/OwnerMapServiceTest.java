@@ -51,6 +51,24 @@ class OwnerMapServiceTest {
 		assertEquals(1L, owner.getId());
 	}
 	@Test
+	void findAllByLastNameLikeEmpty() {
+		service.save(Owner.builder().id(2L).lastName("Marian").build());
+		service.save(Owner.builder().id(3L).lastName("Edgar").build());
+
+		List<Owner> owners = service.findAllByLastNameLike("");
+		assertNotNull(owners);
+		assertEquals(3, owners.size());
+	}
+	@Test
+	void findAllByLastNameLikeMultiple() {
+		service.save(Owner.builder().id(2L).lastName("Marian").build());
+		service.save(Owner.builder().id(3L).lastName("Edgar").build());
+
+		List<Owner> owners = service.findAllByLastNameLike("aR");
+		assertNotNull(owners);
+		assertEquals(2, owners.size());
+	}
+	@Test
 	void findByLastNameNotFound() {
 		Owner owner = service.findByLastName("foo");
 		assertNull(owner);

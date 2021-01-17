@@ -63,6 +63,30 @@ class OwnerSDJpaServiceTest {
 		
 		verify(ownerRepository, times(1)).findAllByLastNameContainsIgnoreCase(anyString());
 	}
+	
+	@Test
+	void findAllByLastNameLikeEmpty() {
+		when(ownerRepository.findAllByLastNameContainsIgnoreCase(any())).thenReturn(Arrays.asList(
+			returnOwner,
+			Owner.builder().id(2L).lastName("Marian").build(),
+			Owner.builder().id(3L).lastName("Edgar").build()
+		));
+		
+		List<Owner> owners = service.findAllByLastNameLike("");
+		assertNotNull(owners);
+		assertEquals(3, owners.size());
+	}
+	@Test
+	void findAllByLastNameLikeMultiple() {
+		when(ownerRepository.findAllByLastNameContainsIgnoreCase(any())).thenReturn(Arrays.asList(
+			Owner.builder().id(2L).lastName("Marian").build(),
+			Owner.builder().id(3L).lastName("Edgar").build()
+		));
+		
+		List<Owner> owners = service.findAllByLastNameLike("aR");
+		assertNotNull(owners);
+		assertEquals(2, owners.size());
+	}
 
 	@Test
 	void findAll() {
