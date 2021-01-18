@@ -2,6 +2,7 @@ package guru.springframework.recipeapp.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 import guru.springframework.recipeapp.converters.RecipeCommandToRecipe;
 import guru.springframework.recipeapp.converters.RecipeToRecipeCommand;
 import guru.springframework.recipeapp.domain.Recipe;
+import guru.springframework.recipeapp.exceptions.NotFoundException;
 import guru.springframework.recipeapp.repositories.RecipeRepository;
 
 class RecipeServiceImplTest {
@@ -58,6 +60,13 @@ class RecipeServiceImplTest {
 		assertNotNull(recipeReturned);
 		verify(recipeRepository, times(1)).findById(Mockito.anyLong());
 		verify(recipeRepository, never()).findAll();
+	}
+	
+	@Test
+	void getRecipeByIdNotFound() {
+		when(recipeRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+		
+		assertThrows(NotFoundException.class, () -> recipeServiceImpl.findById(1L));
 	}
 	
 	@Test
