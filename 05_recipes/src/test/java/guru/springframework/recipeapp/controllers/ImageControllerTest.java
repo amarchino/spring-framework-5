@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class ImageControllerTest {
 	void setUp() throws Exception {
 		try (AutoCloseable ac = MockitoAnnotations.openMocks(this)) {
 			controller = new ImageController(recipeService, imageService);
-			mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new ControllerExceptionHandler()).build();
 		}
 	}
 	
@@ -85,4 +86,12 @@ class ImageControllerTest {
 		assertEquals(s.getBytes().length, responseBytes.length);
 	}
 
+	@Test
+	void renderImageFromDBNumberFormat() throws Exception {
+		// When
+		mockMvc.perform(get("/recipe/aaa/recipeimage"))
+		// Then
+			.andExpect(status().isBadRequest())
+			.andExpect(view().name("400error"));
+	}
 }

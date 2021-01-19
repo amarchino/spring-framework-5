@@ -26,17 +26,19 @@ class IndexControllerTest {
 	private IndexController controller;
 	@Mock private RecipeService recipeService;
 	@Mock private Model model;
+	private MockMvc mockMvc;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		try (AutoCloseable ac = MockitoAnnotations.openMocks(this)) {
 			controller = new IndexController(recipeService);
+			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new ControllerExceptionHandler()).build();
 		}
 	}
 	
 	@Test
 	void testMockMvc() throws Exception {
-		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+		
 		mockMvc.perform(get("/"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("index"));

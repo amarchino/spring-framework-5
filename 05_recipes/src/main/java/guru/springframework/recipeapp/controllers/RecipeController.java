@@ -1,7 +1,5 @@
 package guru.springframework.recipeapp.controllers;
 
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,11 +69,4 @@ public class RecipeController {
 		return mav;
 	}
 	
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(NumberFormatException.class)
-	public ModelAndView handleNotFound(NumberFormatException e) {
-		log.error("Handling number format exception: " + e.getMessage());
-		ModelAndView mav = new ModelAndView("400error", Map.of("exception", e));
-		return mav;
-	}
 }
