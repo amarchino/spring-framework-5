@@ -63,6 +63,7 @@ public class DataLoader implements CommandLineRunner {
 		
 		saveVet("Sam", "Axe", radiology, surgery);
 		saveVet("Jessie", "Porter", dentistry);
+		saveVet("Max", "Johnson");
 		System.out.println("Loaded Vets...");
 	}
 
