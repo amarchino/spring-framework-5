@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +33,7 @@ public class Pet extends BaseEntity {
 	private static final long serialVersionUID = 9052231982640691480L;
 
 	@Column(name = "birth_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
 	@Column(name = "name")
 	private String name;

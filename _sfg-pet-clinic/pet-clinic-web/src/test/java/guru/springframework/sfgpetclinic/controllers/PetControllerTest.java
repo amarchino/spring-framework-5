@@ -64,7 +64,10 @@ class PetControllerTest {
 		when(ownerService.findById(Mockito.anyLong())).thenReturn(owner);
 		when(petTypeService.findAll()).thenReturn(petTypes);
 		
-		mockMvc.perform(post("/owners/1/pets/new"))
+		mockMvc.perform(
+				post("/owners/1/pets/new")
+				.param("birthDate", "2020-01-02")
+			)
 			.andExpect(status().is3xxRedirection())
 			.andExpect(view().name("redirect:/owners/1"));
 	}
