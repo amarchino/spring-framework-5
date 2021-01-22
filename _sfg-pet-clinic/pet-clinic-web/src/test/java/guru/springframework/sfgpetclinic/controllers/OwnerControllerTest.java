@@ -60,7 +60,7 @@ class OwnerControllerTest {
 	void processFindOwnersReturnMany() throws Exception {
 		when(ownerService.findAllByLastNameLike(Mockito.anyString())).thenReturn(new ArrayList<>(owners));
 		
-		mockMvc.perform(get("/owners"))
+		mockMvc.perform(get("/owners").param("lastName", ""))
 			.andExpect(status().isOk())
 			.andExpect(view().name("owners/ownersList"))
 			.andExpect(model().attribute("selections", Matchers.hasSize(2)));
