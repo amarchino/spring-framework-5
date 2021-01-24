@@ -1,0 +1,20 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql.docker.local
+    ports:
+      - 3306:3306
+    volumes:
+      - spring-boot-recipe-mysql:/var/lib/mysql
+      - ./src/main/scripts:/docker-entrypoint-initdb.d
+    networks:
+      - spring-boot-recipe
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+
+volumes:
+  spring-boot-recipe-mysql:
+
+networks:
+  spring-boot-recipe:
