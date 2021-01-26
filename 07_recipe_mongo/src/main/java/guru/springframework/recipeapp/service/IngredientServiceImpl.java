@@ -94,7 +94,6 @@ public class IngredientServiceImpl implements IngredientService {
 		if(optionalIngredient.isPresent()) {
 			log.debug("Found ingredient");
 			Ingredient ingredient = optionalIngredient.get();
-			ingredient.setRecipe(null);
 			recipe.getIngredients().remove(ingredient);
 			recipeRepository.save(recipe);
 		}

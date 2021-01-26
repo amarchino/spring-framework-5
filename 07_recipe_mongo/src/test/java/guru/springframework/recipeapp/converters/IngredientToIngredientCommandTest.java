@@ -45,7 +45,6 @@ public class IngredientToIngredientCommandTest {
 		// given
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
-		ingredient.setRecipe(RECIPE);
 		ingredient.setAmount(QUANTITY);
 		ingredient.setDescription(DESCRIPTION);
 		ingredient.setUom(null);
@@ -62,7 +61,7 @@ public class IngredientToIngredientCommandTest {
 	@Test
 	public void testConvertWithUom() throws Exception {
 		// given
-		Ingredient ingredient = Ingredient.builder().id(ID_VALUE).recipe(RECIPE).amount(QUANTITY).description(DESCRIPTION).build();
+		Ingredient ingredient = Ingredient.builder().id(ID_VALUE).amount(QUANTITY).description(DESCRIPTION).build();
 		UnitOfMeasure uom = UnitOfMeasure.builder().id(UOM_ID).build();
 
 		ingredient.setUom(uom);
@@ -80,7 +79,6 @@ public class IngredientToIngredientCommandTest {
 	public void testConvertNullRecipe() throws Exception {
 		// given
 		Ingredient ingredient = new Ingredient();
-		ingredient.setRecipe(null);
 		// when
 		IngredientCommand ingredientCommand = converter.convert(ingredient);
 		// then
@@ -91,7 +89,6 @@ public class IngredientToIngredientCommandTest {
 	public void testConvertWithRecipe() throws Exception {
 		// given
 		Ingredient ingredient = new Ingredient();
-		ingredient.setRecipe(RECIPE);
 		
 		// when
 		IngredientCommand ingredientCommand = converter.convert(ingredient);

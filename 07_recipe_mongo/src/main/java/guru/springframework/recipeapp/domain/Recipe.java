@@ -3,6 +3,10 @@ package guru.springframework.recipeapp.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +16,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Document
 public class Recipe {
 
+	@Id
 	private String id;
 	private String description;
 	private Integer prepTime;
@@ -28,21 +34,17 @@ public class Recipe {
 	@Builder.Default
 	private Set<Ingredient> ingredients = new HashSet<>();
 	@Builder.Default
+	@DBRef
 	private Set<Category> categories = new HashSet<>();
 
 	public void setNotes(Notes notes) {
 		this.notes = notes;
-		if(notes != null) {
-			notes.setRecipe(this);
-		}
 	}
 	public Recipe addIngredient(Ingredient ingredient) {
-		ingredient.setRecipe(this);
 		this.ingredients.add(ingredient);
 		return this;
 	}
 	public Recipe removeIngredient(Ingredient ingredient) {
-		ingredient.setRecipe(null);
 		this.ingredients.remove(ingredient);
 		return this;
 	}

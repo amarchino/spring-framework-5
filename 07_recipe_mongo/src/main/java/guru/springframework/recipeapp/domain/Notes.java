@@ -1,9 +1,10 @@
 package guru.springframework.recipeapp.domain;
 
+import org.springframework.data.annotation.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -12,9 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Notes {
 	
+	@Id
 	private String id;
 	private String recipeNotes;
-	@EqualsAndHashCode.Exclude
-	private Recipe recipe;
 
 }

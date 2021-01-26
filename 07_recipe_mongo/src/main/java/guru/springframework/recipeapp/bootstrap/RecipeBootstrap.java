@@ -2,6 +2,7 @@ package guru.springframework.recipeapp.bootstrap;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.ApplicationListener;
@@ -27,20 +28,44 @@ import lombok.extern.slf4j.Slf4j;
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	
 	private final CategoryRepository categoryRepository;
-	private final UnitOfMeasureRepository uomOfMeasureRepository;
+	private final UnitOfMeasureRepository unitOfMeasureRepository;
 	private final RecipeRepository recipeRepository;
 
 	public RecipeBootstrap(CategoryRepository categoryRepository, UnitOfMeasureRepository uomOfMeasureRepository, RecipeRepository recipeRepository) {
 		this.categoryRepository = categoryRepository;
-		this.uomOfMeasureRepository = uomOfMeasureRepository;
+		this.unitOfMeasureRepository = uomOfMeasureRepository;
 		this.recipeRepository = recipeRepository;
 	}
 
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+		categoryRepository.saveAll(getCategories());
+		unitOfMeasureRepository.saveAll(getUnitsOfMeasure());
 		recipeRepository.saveAll(getRecipes());
 		log.debug("Loaded bootstrap data");
+	}
+	
+	private List<UnitOfMeasure> getUnitsOfMeasure() {
+		return Arrays.asList(
+			UnitOfMeasure.builder().description("Teaspoon").build(),
+			UnitOfMeasure.builder().description("Tablespoon").build(),
+			UnitOfMeasure.builder().description("Cup").build(),
+			UnitOfMeasure.builder().description("Pinch").build(),
+			UnitOfMeasure.builder().description("Ounce").build(),
+			UnitOfMeasure.builder().description("Each").build(),
+			UnitOfMeasure.builder().description("Dash").build(),
+			UnitOfMeasure.builder().description("Pint").build()
+		);
+	}
+	
+	private List<Category> getCategories() {
+		return Arrays.asList(
+			Category.builder().description("American").build(),
+			Category.builder().description("Italian").build(),
+			Category.builder().description("Mexican").build(),
+			Category.builder().description("Fast Food").build()
+		);
 	}
 	
 	private List<Recipe> getRecipes() {
@@ -158,7 +183,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 	
 	private UnitOfMeasure getUnitOfMeasure(String description) {
-		return uomOfMeasureRepository.findByDescription(description).orElseThrow(() -> new RuntimeException("Expected Unit of Measure \"" + description + "\" not found"));
+		return unitOfMeasureRepository.findByDescription(description).orElseThrow(() -> new RuntimeException("Expected Unit of Measure \"" + description + "\" not found"));
 	}
 	private Category getCategory(String description) {
 		return categoryRepository.findByDescription(description).orElseThrow(() -> new RuntimeException("Expected Category \"" + description + "\" not found"));
