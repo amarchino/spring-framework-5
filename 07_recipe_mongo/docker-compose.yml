@@ -1,0 +1,21 @@
+version: "3"
+services:
+  mysql:
+    image: mongo:latest
+    container_name: mongo.docker.local
+    ports:
+      - 27017:27017
+    volumes:
+      - spring-boot-recipe-mongo:/var/lib/mysql
+      - ./src/main/scripts:/docker-entrypoint-initdb.d
+    networks:
+      - spring-boot-recipe-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+
+volumes:
+  spring-boot-recipe-mongo:
+
+networks:
+  spring-boot-recipe-mongo:
