@@ -44,10 +44,10 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 		recipeCommand.setImage(source.getImage());
 		recipeCommand.setNotes(noteConverter.convert(source.getNotes()));
 		if(source.getIngredients() != null && !source.getIngredients().isEmpty()) {
-			recipeCommand.setIngredients(source.getIngredients().stream().map(ingredientConverter::convert).collect(Collectors.toSet()));
+			recipeCommand.setIngredients(source.getIngredients().stream().map(ingredientConverter::convert).collect(Collectors.toList()));
 		}
 		if(source.getCategories() != null && !source.getCategories().isEmpty()) {
-			recipeCommand.setCategories(source.getCategories().stream().map(categoryConverter::convert).collect(Collectors.toSet()));
+			recipeCommand.setCategories(source.getCategories().stream().map(categoryConverter::convert).collect(Collectors.toList()));
 		}
 		return recipeCommand;
 	}
