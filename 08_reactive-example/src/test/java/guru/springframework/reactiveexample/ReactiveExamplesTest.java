@@ -70,7 +70,7 @@ public class ReactiveExamplesTest {
 
 	@Test
 	public void fluxTestDelay() throws Exception {
-		CountDownLatch countDownLatch = new Counx\tDownLatch(1);
+		CountDownLatch countDownLatch = new CountDownLatch(1);
 		Flux<Person> people = Flux.just(michael, fiona, sam, jesse);
 		people.delayElements(Duration.ofSeconds(1))
 				.doOnComplete(countDownLatch::countDown)
