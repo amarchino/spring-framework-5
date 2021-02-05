@@ -35,7 +35,7 @@ public class RecipeServiceIT {
     @Autowired private RecipeRepository recipeRepository;
     @Autowired private UnitOfMeasureRepository uomOfMeasureRepository;
 	@Autowired private CategoryRepository categoryRepository;
-
+	
 	private CategoryCommandToCategory categoryConverter = new CategoryCommandToCategory();
 	private NotesCommandToNotes noteConverter = new NotesCommandToNotes();
 	private UnitOfMeasureCommandToUnitOfMeasure uomConverter = new UnitOfMeasureCommandToUnitOfMeasure();

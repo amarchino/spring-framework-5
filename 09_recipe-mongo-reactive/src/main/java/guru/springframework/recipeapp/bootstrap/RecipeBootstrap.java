@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,11 +20,12 @@ import guru.springframework.recipeapp.domain.UnitOfMeasure;
 import guru.springframework.recipeapp.repositories.CategoryRepository;
 import guru.springframework.recipeapp.repositories.RecipeRepository;
 import guru.springframework.recipeapp.repositories.UnitOfMeasureRepository;
-import guru.springframework.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 @Profile("default")
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	
@@ -33,15 +33,6 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	private final UnitOfMeasureRepository unitOfMeasureRepository;
 	private final RecipeRepository recipeRepository;
 	
-	@Autowired
-	private UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
-
-	public RecipeBootstrap(CategoryRepository categoryRepository, UnitOfMeasureRepository uomOfMeasureRepository, RecipeRepository recipeRepository) {
-		this.categoryRepository = categoryRepository;
-		this.unitOfMeasureRepository = uomOfMeasureRepository;
-		this.recipeRepository = recipeRepository;
-	}
-
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -49,11 +40,6 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 		unitOfMeasureRepository.saveAll(getUnitsOfMeasure());
 		recipeRepository.saveAll(getRecipes());
 		log.debug("Loaded bootstrap data");
-
-		log.error("#########");
-		log.error("Count: " + unitOfMeasureReactiveRepository.count().block().toString());
-		log.error("#########");
-
 	}
 	
 	private List<UnitOfMeasure> getUnitsOfMeasure() {
