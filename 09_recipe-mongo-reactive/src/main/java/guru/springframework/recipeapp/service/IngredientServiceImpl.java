@@ -13,7 +13,6 @@ import guru.springframework.recipeapp.repositories.reactive.RecipeReactiveReposi
 import guru.springframework.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -30,11 +29,11 @@ public class IngredientServiceImpl implements IngredientService {
 	public Mono<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
 		return recipeReactiveRepository
 				.findById(recipeId)
-				.flatMapMany(r -> Flux.fromIterable(r.getIngredients()))
-				.filter(ingredient -> ingredientId.equals(ingredient.getId()))
+				.flatMapIterable(r -> r.getIngredients())
+				.filter(ingredient -> ingredientId.equalsIgnoreCase(ingredient.getId()))
+				.single()
 				.map(ingredientToIngredientCommand::convert)
-				.doOnNext(i -> i.setRecipeId(recipeId))
-				.last();
+				.doOnNext(i -> i.setRecipeId(recipeId));
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class IngredientServiceImpl implements IngredientService {
 		log.debug("Found recipe");
 		Optional<Ingredient> optionalIngredient = recipe.getIngredients()
 			.stream()
-			.filter(i -> ingredientId.equals(i.getId()))
+			.filter(i -> ingredientId.equalsIgnoreCase(i.getId()))
 			.findFirst();
 		if(optionalIngredient.isPresent()) {
 			log.debug("Found ingredient");
