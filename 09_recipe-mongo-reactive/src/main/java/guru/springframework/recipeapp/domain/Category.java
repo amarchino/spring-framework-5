@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +24,6 @@ public class Category {
 	private String description;
 	@EqualsAndHashCode.Exclude
 	@Builder.Default
-	@DBRef
 	private Set<Recipe> recipes = new HashSet<>();
 
 }

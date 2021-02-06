@@ -38,13 +38,12 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
-		Optional<Recipe> recipeOptional = recipeReactiveRepository.findById(command.getRecipeId()).blockOptional();
-		if(!recipeOptional.isPresent()) {
+		Recipe recipe = recipeReactiveRepository.findById(command.getRecipeId()).block();
+		if(recipe == null) {
 			// TODO throw error if not exists
 			log.error("Recipe not found for id " + command.getRecipeId());
 			return Mono.just(new IngredientCommand());
 		}
-		Recipe recipe = recipeOptional.get();
 		Optional<Ingredient> ingredientOptional = recipe
 				.getIngredients()
 				.stream()
@@ -80,13 +79,11 @@ public class IngredientServiceImpl implements IngredientService {
 	@Override
 	public Mono<Void> deleteById(String recipeId, String ingredientId) {
 		log.debug("Deleting ingredient:"+recipeId+":"+ingredientId);
-		Optional<Recipe> optionalRecipe = recipeReactiveRepository.findById(recipeId).blockOptional();
-		if(!optionalRecipe.isPresent()) {
+		Recipe recipe = recipeReactiveRepository.findById(recipeId).block();
+		if(recipe == null) {
 			log.debug("Recipe id not found. Id:" + recipeId);
 			return Mono.empty();
 		}
-		Recipe recipe = optionalRecipe.get();
-		
 		log.debug("Found recipe");
 		Optional<Ingredient> optionalIngredient = recipe.getIngredients()
 			.stream()
