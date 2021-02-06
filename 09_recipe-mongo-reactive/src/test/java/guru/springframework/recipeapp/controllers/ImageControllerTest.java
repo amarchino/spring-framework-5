@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.service.ImageService;
 import guru.springframework.recipeapp.service.RecipeService;
+import reactor.core.publisher.Mono;
 
 class ImageControllerTest {
 	
@@ -44,7 +45,7 @@ class ImageControllerTest {
 		// Given
 		RecipeCommand command = new RecipeCommand();
 		command.setId("1");
-		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(command);
+		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(command));
 		
 		// When
 		mockMvc.perform(get("/recipe/1/image"))
@@ -75,7 +76,7 @@ class ImageControllerTest {
 			bytes[i++] = b;
 		}
 		command.setImage(bytes);
-		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(command);
+		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(command));
 		// When
 		MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
 		// Then

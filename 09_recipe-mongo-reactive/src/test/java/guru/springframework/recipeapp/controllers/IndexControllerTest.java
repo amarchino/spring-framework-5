@@ -5,8 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import org.springframework.ui.Model;
 
 import guru.springframework.recipeapp.domain.Recipe;
 import guru.springframework.recipeapp.service.RecipeService;
+import reactor.core.publisher.Flux;
 
 class IndexControllerTest {
 	
@@ -39,6 +39,8 @@ class IndexControllerTest {
 	@Test
 	void testMockMvc() throws Exception {
 		
+		Mockito.when(recipeService.getRecipes()).thenReturn(Flux.empty());
+		
 		mockMvc.perform(get("/"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("index"));
@@ -47,14 +49,12 @@ class IndexControllerTest {
 	@Test
 	void testGetIndexPage() {
 		// Given 
-		Set<Recipe> recipeData = new HashSet<>();
-		recipeData.add(new Recipe());
-		Recipe recipe = new Recipe();
-		recipe.setId("1");
-		recipeData.add(recipe);
-		Mockito.when(recipeService.getRecipes()).thenReturn(recipeData);
+		Mockito.when(recipeService.getRecipes()).thenReturn(Flux.just(
+			Recipe.builder().build(),
+			Recipe.builder().id("1").build()
+		));
 		@SuppressWarnings("unchecked")
-		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+		ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 		
 		// When
 		String result = controller.getIndexPage(model);
@@ -63,7 +63,7 @@ class IndexControllerTest {
 		assertEquals("index", result);
 		Mockito.verify(recipeService, Mockito.times(1)).getRecipes();
 		Mockito.verify(model, Mockito.times(1)).addAttribute(Mockito.eq("recipes"), argumentCaptor.capture());
-		Set<Recipe> setInController = argumentCaptor.getValue();
+		List<Recipe> setInController = argumentCaptor.getValue();
 		assertEquals(2, setInController.size());
 	}
 

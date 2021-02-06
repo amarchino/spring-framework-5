@@ -22,6 +22,7 @@ import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.domain.Recipe;
 import guru.springframework.recipeapp.exceptions.NotFoundException;
 import guru.springframework.recipeapp.service.RecipeService;
+import reactor.core.publisher.Mono;
 
 class RecipeControllerTest {
 
@@ -42,7 +43,7 @@ class RecipeControllerTest {
 	void getRecipe() throws Exception {
 		Recipe recipe = new Recipe();
 		recipe.setId("1");
-		when(recipeService.findById(Mockito.anyString())).thenReturn(recipe);
+		when(recipeService.findById(Mockito.anyString())).thenReturn(Mono.just(recipe));
 
 		mockMvc.perform(get("/recipe/1/show")).andExpect(status().isOk()).andExpect(view().name("recipe/show"))
 				.andExpect(model().attributeExists("recipe"));
@@ -70,7 +71,7 @@ class RecipeControllerTest {
 		RecipeCommand command = new RecipeCommand();
 		command.setId("2");
 
-		when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(command);
+		when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(Mono.just(command));
 
 		mockMvc.perform(
 				post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -87,7 +88,7 @@ class RecipeControllerTest {
 		RecipeCommand command = new RecipeCommand();
 		command.setId("2");
 
-		when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(command);
+		when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(Mono.just(command));
 
 		mockMvc.perform(
 				post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -104,7 +105,7 @@ class RecipeControllerTest {
 		RecipeCommand command = new RecipeCommand();
 		command.setId("2");
 
-		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(command);
+		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(command));
 
 		mockMvc.perform(get("/recipe/1/update"))
 			.andExpect(status().isOk())
@@ -114,6 +115,8 @@ class RecipeControllerTest {
 	
 	@Test
 	public void deleteRecipe() throws Exception {
+		when(recipeService.deleteById(Mockito.anyString())).thenReturn(Mono.empty());
+		
 		mockMvc.perform(get("/recipe/1/delete"))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(view().name("redirect:/"));

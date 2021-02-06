@@ -8,9 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,58 +20,54 @@ import guru.springframework.recipeapp.converters.RecipeCommandToRecipe;
 import guru.springframework.recipeapp.converters.RecipeToRecipeCommand;
 import guru.springframework.recipeapp.domain.Recipe;
 import guru.springframework.recipeapp.exceptions.NotFoundException;
-import guru.springframework.recipeapp.repositories.RecipeRepository;
+import guru.springframework.recipeapp.repositories.reactive.RecipeReactiveRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 class RecipeServiceImplTest {
-	RecipeServiceImpl recipeServiceImpl;
-	@Mock RecipeRepository recipeRepository;
-	@Mock RecipeToRecipeCommand recipeToRecipeCommand;
-    @Mock RecipeCommandToRecipe recipeCommandToRecipe;
+	private RecipeServiceImpl recipeServiceImpl;
+	@Mock private RecipeReactiveRepository recipeReactiveRepository;
+	@Mock private RecipeToRecipeCommand recipeToRecipeCommand;
+    @Mock private RecipeCommandToRecipe recipeCommandToRecipe;
 	
 	@BeforeEach
 	public void setUp() throws Exception {
 		try(AutoCloseable mocks = MockitoAnnotations.openMocks(this)) {
-			recipeServiceImpl = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
+			recipeServiceImpl = new RecipeServiceImpl(recipeReactiveRepository, recipeCommandToRecipe, recipeToRecipeCommand);
 		}
 	}
 
 	@Test
 	void getRecipes() {
-		Recipe recipe = new Recipe();
-		Set<Recipe> recipeData = new HashSet<>();
-		recipeData.add(recipe);
+		when(recipeReactiveRepository.findAll()).thenReturn(Flux.just(Recipe.builder().build()));
 		
-		when(recipeRepository.findAll()).thenReturn(recipeData);
-		
-		Set<Recipe> recipes = recipeServiceImpl.getRecipes();
+		List<Recipe> recipes = recipeServiceImpl.getRecipes().collectList().block();
 		assertEquals(1, recipes.size());
-		verify(recipeRepository, times(1)).findAll();
+		verify(recipeReactiveRepository, times(1)).findAll();
 	}
 
 	@Test
 	void getRecipeById() {
-		Recipe recipe = new Recipe();
-		recipe.setId("1");
-		when(recipeRepository.findById(Mockito.anyString())).thenReturn(Optional.of(recipe));
+		when(recipeReactiveRepository.findById(Mockito.anyString())).thenReturn(Mono.just(Recipe.builder().id("1").build()));
 		
-		Recipe recipeReturned = recipeServiceImpl.findById("1");
+		Recipe recipeReturned = recipeServiceImpl.findById("1").block();
 		assertNotNull(recipeReturned);
-		verify(recipeRepository, times(1)).findById(Mockito.anyString());
-		verify(recipeRepository, never()).findAll();
+		verify(recipeReactiveRepository, times(1)).findById(Mockito.anyString());
+		verify(recipeReactiveRepository, never()).findAll();
 	}
 	
 	@Test
 	void getRecipeByIdNotFound() {
-		when(recipeRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
-		
-		assertThrows(NotFoundException.class, () -> recipeServiceImpl.findById("1"));
+		when(recipeReactiveRepository.findById(Mockito.anyString())).thenReturn(Mono.empty());
+		assertThrows(NotFoundException.class, () -> recipeServiceImpl.findById("1").block());
 	}
 	
 	@Test
 	void deleteById() {
 		String idToDelete = "1";
-		recipeServiceImpl.deleteById(idToDelete);
+		when(recipeReactiveRepository.deleteById(Mockito.anyString())).thenReturn(Mono.empty());
+		recipeServiceImpl.deleteById(idToDelete).block();
 		
-		verify(recipeRepository, times(1)).deleteById(Mockito.anyString());
+		verify(recipeReactiveRepository, times(1)).deleteById(Mockito.anyString());
 	}
 }
