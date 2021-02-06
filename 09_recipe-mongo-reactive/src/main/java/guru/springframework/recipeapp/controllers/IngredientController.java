@@ -40,7 +40,7 @@ public class IngredientController {
 	@GetMapping("/recipe/{recipeId}/ingredient/{id}/update")
 	public String updateRecipeIngredient(@PathVariable("recipeId") String recipeId, @PathVariable("id") String id, Model model) {
 		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id));
-		model.addAttribute("uomList", uomOfMeasureService.listAllUoms());
+		model.addAttribute("uomList", uomOfMeasureService.listAllUoms().collectList().block());
 		return "recipe/ingredient/ingredient-form";
 	}
 	
@@ -55,7 +55,7 @@ public class IngredientController {
 		ingredientCommand.setUom(new UnitOfMeasureCommand());
 		
 		model.addAttribute("ingredient", ingredientCommand);
-		model.addAttribute("uomList", uomOfMeasureService.listAllUoms());
+		model.addAttribute("uomList", uomOfMeasureService.listAllUoms().collectList().block());
 		return "recipe/ingredient/ingredient-form";
 	}
 	
