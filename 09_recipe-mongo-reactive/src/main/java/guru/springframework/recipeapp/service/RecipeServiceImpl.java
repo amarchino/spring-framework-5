@@ -32,25 +32,27 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public Mono<Recipe> findById(String id) {
-		return recipeReactiveRepository.findById(id)
+		return recipeReactiveRepository
+				.findById(id)
 				.switchIfEmpty(Mono.error(new NotFoundException("Recipe, id: " + id)));
 	}
 
 	@Override
 	@Transactional
 	public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand command) {
-		Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
-		return recipeReactiveRepository.save(detachedRecipe)
-			.doOnNext(savedRecipe -> log.debug("Saved RecipeId: " + savedRecipe.getId()))
-			.single()
-			.map(recipeToRecipeCommand::convert);
+		return recipeReactiveRepository
+				.save(recipeCommandToRecipe.convert(command))
+				.doOnNext(savedRecipe -> log.debug("Saved RecipeId: " + savedRecipe.getId()))
+				.single()
+				.map(recipeToRecipeCommand::convert);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Mono<RecipeCommand> findCommandById(String id) {
 		return findById(id)
-				.map(recipeToRecipeCommand::convert);
+				.map(recipeToRecipeCommand::convert)
+				.doOnNext(rc -> rc.getIngredients().forEach(i -> i.setRecipeId(id)));
 	}
 
 	@Override
