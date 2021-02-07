@@ -11,6 +11,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
 import guru.springframework.recipeapp.domain.Difficulty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RecipeCommand {
 	private String id;
 	
@@ -38,9 +42,11 @@ public class RecipeCommand {
 	private String url;
 	@NotBlank
 	private String directions;
+	@Builder.Default
 	private List<IngredientCommand> ingredients = new ArrayList<>();
 	private Difficulty difficulty;
 	private NotesCommand notes;
+	@Builder.Default
 	private List<CategoryCommand> categories = new ArrayList<>();
 	private Byte[] image;
 }
