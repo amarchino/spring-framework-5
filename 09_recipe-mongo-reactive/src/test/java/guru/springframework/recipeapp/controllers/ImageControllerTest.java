@@ -29,6 +29,7 @@ import guru.springframework.recipeapp.service.RecipeService;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
+@Disabled
 class ImageControllerTest {
 	
 	@Mock private ImageService imageService;

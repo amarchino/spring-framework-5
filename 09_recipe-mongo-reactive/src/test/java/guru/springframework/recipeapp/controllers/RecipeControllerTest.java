@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,6 +25,7 @@ import guru.springframework.recipeapp.exceptions.NotFoundException;
 import guru.springframework.recipeapp.service.RecipeService;
 import reactor.core.publisher.Mono;
 
+@Disabled
 class RecipeControllerTest {
 
 	@Mock
