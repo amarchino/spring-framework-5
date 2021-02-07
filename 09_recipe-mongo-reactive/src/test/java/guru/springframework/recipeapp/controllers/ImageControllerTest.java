@@ -12,9 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,19 +27,17 @@ import guru.springframework.recipeapp.service.ImageService;
 import guru.springframework.recipeapp.service.RecipeService;
 import reactor.core.publisher.Mono;
 
+@ExtendWith(MockitoExtension.class)
 class ImageControllerTest {
 	
 	@Mock private ImageService imageService;
 	@Mock private RecipeService recipeService;
-	private ImageController controller;
+	@InjectMocks private ImageController controller;
 	private MockMvc mockMvc;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		try (AutoCloseable ac = MockitoAnnotations.openMocks(this)) {
-			controller = new ImageController(recipeService, imageService);
-			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new ControllerExceptionHandler()).build();
-		}
+		mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new ControllerExceptionHandler()).build();
 	}
 	
 	@Test
@@ -57,6 +57,8 @@ class ImageControllerTest {
 
 	@Test
 	void handeImagePost() throws Exception {
+		when(imageService.saveImageFile(Mockito.anyString(), Mockito.any())).thenReturn(Mono.empty());
+		
 		MockMultipartFile multipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain", "Spring framework Guru".getBytes());
 		mockMvc.perform(multipart("/recipe/1/image").file(multipartFile))
 			.andExpect(status().is3xxRedirection())

@@ -1,7 +1,6 @@
 package guru.springframework.recipeapp.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.converters.RecipeCommandToRecipe;
@@ -38,7 +37,6 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	@Transactional
 	public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand command) {
 		return recipeReactiveRepository
 				.save(recipeCommandToRecipe.convert(command))
@@ -48,7 +46,6 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public Mono<RecipeCommand> findCommandById(String id) {
 		return findById(id)
 				.map(recipeToRecipeCommand::convert)
