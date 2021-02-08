@@ -14,6 +14,7 @@ import guru.springframework.recipeapp.service.RecipeService;
 import guru.springframework.recipeapp.service.UnitOfMeasureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -68,9 +69,8 @@ public class IngredientController {
 	}
 	
 	@GetMapping("/recipe/{recipeId}/ingredient/{id}/delete")
-	public String deleteIngredient(@PathVariable("recipeId") String recipeId, @PathVariable("id") String id) {
+	public Mono<String> deleteIngredient(@PathVariable("recipeId") String recipeId, @PathVariable("id") String id) {
 		log.debug("Deleting ingredient id: " + id);
-		ingredientService.deleteById(recipeId, id).block();
-		return "redirect:/recipe/"+recipeId+"/ingredients";
+		return ingredientService.deleteById(recipeId, id).thenReturn("redirect:/recipe/"+recipeId+"/ingredients");
 	}
 }
