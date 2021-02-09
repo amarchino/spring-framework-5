@@ -2,6 +2,7 @@ package guru.springframework.recipeapp.converters;
 
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,9 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
 			return null;
 		}
 		final Recipe recipe = new Recipe();
-		recipe.setId(source.getId());
+		if(StringUtils.isNotBlank(source.getId())) {
+			recipe.setId(source.getId());
+		}
 		recipe.setDescription(source.getDescription());
 		recipe.setPrepTime(source.getPrepTime());
 		recipe.setCookTime(source.getCookTime());

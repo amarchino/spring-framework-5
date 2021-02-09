@@ -14,12 +14,14 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import guru.springframework.recipeapp.commands.IngredientCommand;
+import guru.springframework.recipeapp.commands.UnitOfMeasureCommand;
 import guru.springframework.recipeapp.converters.IngredientCommandToIngredient;
 import guru.springframework.recipeapp.converters.IngredientToIngredientCommand;
 import guru.springframework.recipeapp.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import guru.springframework.recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.recipeapp.domain.Ingredient;
 import guru.springframework.recipeapp.domain.Recipe;
+import guru.springframework.recipeapp.domain.UnitOfMeasure;
 import guru.springframework.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import guru.springframework.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
 import reactor.core.publisher.Mono;
@@ -71,12 +73,16 @@ class IngredientServiceImplTest {
 		IngredientCommand command = new IngredientCommand();
 		command.setId("3");
 		command.setRecipeId("2");
+		command.setUom(UnitOfMeasureCommand.builder().id("1").build());
 		
 		Recipe savedRecipe = new Recipe();
 		savedRecipe.addIngredient(Ingredient.builder().id("3").build());
 		
+		UnitOfMeasure uom = UnitOfMeasure.builder().id("1").build();
+		
 		when(recipeReactiveRepository.findById(Mockito.anyString())).thenReturn(Mono.just(new Recipe()));
 		when(recipeReactiveRepository.save(Mockito.any())).thenReturn(Mono.just(savedRecipe));
+		when(uomOfMeasureReactiveRepository.findById(Mockito.anyString())).thenReturn(Mono.just(uom));
 		
 		// When
 		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
@@ -96,7 +102,7 @@ class IngredientServiceImplTest {
 		when(recipeReactiveRepository.save(Mockito.any(Recipe.class))).thenReturn(Mono.just(recipe));
 		
 		// When
-		ingredientService.deleteById("1", "3");
+		ingredientService.deleteById("1", "3").block();
 		// Then
 		verify(recipeReactiveRepository, times(1)).findById(Mockito.anyString());
 		verify(recipeReactiveRepository, times(1)).save(Mockito.any(Recipe.class));
