@@ -1,5 +1,6 @@
 package guru.springframework.recipeapp.converters;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,9 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
 			return null;
 		}
 		final Ingredient ingredient = new Ingredient();
-		ingredient.setId(source.getId());
+		if(StringUtils.isNotBlank(source.getId())) {
+			ingredient.setId(source.getId());
+		}
 		ingredient.setDescription(source.getDescription());
 		ingredient.setAmount(source.getAmount());
 		ingredient.setUom(uomConverter.convert(source.getUom()));

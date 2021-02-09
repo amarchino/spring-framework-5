@@ -2,18 +2,21 @@ package guru.springframework.recipeapp.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import guru.springframework.recipeapp.commands.NotesCommand;
 import guru.springframework.recipeapp.commands.RecipeCommand;
@@ -25,6 +28,7 @@ import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(RecipeController.class)
+@AutoConfigureWebTestClient(timeout = "36000")
 class RecipeControllerTest {
 
 	@MockBean private RecipeService recipeService;
@@ -80,39 +84,43 @@ class RecipeControllerTest {
 	}
 
 	@Test
-	@Disabled
 	public void postNewRecipeForm() throws Exception {
-//		RecipeCommand command = new RecipeCommand();
-//		command.setId("2");
-//
-//		when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(Mono.just(command));
-//
-//		mockMvc.perform(
-//				post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//				.param("id", "")
-//				.param("description", "some string")
-//				.param("directions", "some directions")
-//			)
-//			.andExpect(status().is3xxRedirection())
-//			.andExpect(view().name("redirect:/recipe/2/show"));
+		RecipeCommand command = new RecipeCommand();
+		command.setId("2");
+		command.setCookTime(3000);
+		command.setDescription("some String");
+		command.setDirections("Some directions");
+
+		when(recipeService.saveRecipeCommand(Mockito.any(RecipeCommand.class))).thenReturn(Mono.just(command));
+		
+		webTestClient
+			.post()
+			.uri("/recipe")
+			.body(BodyInserters
+					.fromFormData("id", "2")
+					.with("cookTime", "10")
+					.with("description", "some string")
+					.with("directions", "some directions")
+			)
+			.exchange()
+			.expectStatus().is3xxRedirection()
+			.expectHeader().location("/recipe/2/show");
+		Mockito.verify(recipeService, Mockito.times(1)).saveRecipeCommand(Mockito.any(RecipeCommand.class));
 	}
 	
 	@Test
-	@Disabled
 	public void postNewRecipeFormValidationFail() throws Exception {
-//		RecipeCommand command = new RecipeCommand();
-//		command.setId("2");
-//
-//		when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(Mono.just(command));
-//
-//		mockMvc.perform(
-//				post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//				.param("id", "")
-//				.param("cookTime", "3000")
-//			)
-//			.andExpect(status().isOk())
-//			.andExpect(model().attributeExists("recipe"))
-//			.andExpect(view().name("recipe/recipe-form"));
+		webTestClient
+			.post()
+			.uri("/recipe")
+			.body(BodyInserters
+					.fromFormData("id", "2")
+					.with("cookTime", "3000")
+					.with("description", "some string")
+					.with("directions", "some directions")
+			)
+			.exchange()
+			.expectStatus().isOk();
 	}
 
 	@Test
@@ -143,14 +151,16 @@ class RecipeControllerTest {
 	}
 	
 	@Test
-	@Disabled
 	public void deleteRecipe() throws Exception {
-//		when(recipeService.deleteById(Mockito.anyString())).thenReturn(Mono.empty());
-//		
-//		mockMvc.perform(get("/recipe/1/delete"))
-//			.andExpect(status().is3xxRedirection())
-//			.andExpect(view().name("redirect:/"));
-//		verify(recipeService, times(1)).deleteById(Mockito.anyString());
+		when(recipeService.deleteById(Mockito.anyString())).thenReturn(Mono.empty());
+		
+		webTestClient
+			.get()
+			.uri("/recipe/1/delete")
+			.exchange()
+			.expectStatus().is3xxRedirection()
+			.expectHeader().location("/");
+		verify(recipeService, times(1)).deleteById(Mockito.anyString());
 	}
 
 }

@@ -3,21 +3,19 @@ package guru.springframework.recipeapp.controllers;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import guru.springframework.recipeapp.commands.IngredientCommand;
 import guru.springframework.recipeapp.commands.RecipeCommand;
@@ -28,22 +26,15 @@ import guru.springframework.recipeapp.service.UnitOfMeasureService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Disabled
+@ExtendWith(SpringExtension.class)
+@WebFluxTest(IngredientController.class)
+@AutoConfigureWebTestClient(timeout = "36000")
 class IngredientControllerTest {
 	
-	@Mock private RecipeService recipeService;
-	@Mock private IngredientService ingredientService;
-	@Mock private UnitOfMeasureService uomOfMeasureService;
-	private IngredientController controller;
-	private MockMvc mockMvc;
-
-	@BeforeEach
-	void setUp() throws Exception {
-		try(AutoCloseable ac = MockitoAnnotations.openMocks(this)) {
-			controller = new IngredientController(recipeService, ingredientService, uomOfMeasureService);
-			mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-		}
-	}
+	@MockBean private RecipeService recipeService;
+	@MockBean private IngredientService ingredientService;
+	@MockBean private UnitOfMeasureService uomOfMeasureService;
+	@Autowired private WebTestClient webTestClient;
 
 	@Test
 	void listIngredients() throws Exception {
@@ -52,44 +43,53 @@ class IngredientControllerTest {
 		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(recipeCommand));
 		
 		// When
-		mockMvc.perform(get("/recipe/1/ingredients"))
-		// Then
-			.andExpect(status().isOk())
-			.andExpect(view().name("recipe/ingredient/list"))
-			.andExpect(model().attributeExists("recipe"));
+		webTestClient
+			.get()
+			.uri("/recipe/1/ingredients")
+			.exchange()
+			.expectStatus().isOk();
 		verify(recipeService, times(1)).findCommandById(Mockito.anyString());
 	}
 	
 	@Test
 	void showIngredient() throws Exception {
 		// Given
-		IngredientCommand ingredientCommand = new IngredientCommand();
+		IngredientCommand ingredientCommand = IngredientCommand.builder()
+				.uom(UnitOfMeasureCommand.builder().id("1").build())
+				.build();
 		when(ingredientService.findByRecipeIdAndIngredientId(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.just(ingredientCommand));
 		
 		// When
-		mockMvc.perform(get("/recipe/1/ingredient/2/show"))
-		// Then
-			.andExpect(status().isOk())
-			.andExpect(view().name("recipe/ingredient/show"))
-			.andExpect(model().attributeExists("ingredient"));
+		webTestClient
+			.get()
+			.uri("/recipe/1/ingredient/2/show")
+			.exchange()
+			.expectStatus().isOk();
 		verify(ingredientService, times(1)).findByRecipeIdAndIngredientId(Mockito.anyString(), Mockito.anyString());
 	}
 	
 	@Test
 	void updateIngredientForm() throws Exception {
 		// Given
-		IngredientCommand ingredientCommand = new IngredientCommand();
+		List<UnitOfMeasureCommand> uoms = List.of(
+				UnitOfMeasureCommand.builder().id("1").build(),
+				UnitOfMeasureCommand.builder().id("2").build(),
+				UnitOfMeasureCommand.builder().id("3").build()
+		);
+		
+		IngredientCommand ingredientCommand = IngredientCommand.builder()
+				.uom(UnitOfMeasureCommand.builder().id("1").build())
+				.build();
 
 		when(ingredientService.findByRecipeIdAndIngredientId(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.just(ingredientCommand));
-		when(uomOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
+		when(uomOfMeasureService.listAllUoms()).thenReturn(Flux.fromIterable(uoms));
 		
 		// When
-		mockMvc.perform(get("/recipe/1/ingredient/2/update"))
-		// Then
-			.andExpect(status().isOk())
-			.andExpect(view().name("recipe/ingredient/ingredient-form"))
-			.andExpect(model().attributeExists("ingredient"))
-			.andExpect(model().attributeExists("uomList"));
+		webTestClient
+			.get()
+			.uri("/recipe/1/ingredient/2/update")
+			.exchange()
+			.expectStatus().isOk();
 	}
 	
 	@Test
@@ -99,15 +99,14 @@ class IngredientControllerTest {
 		recipeCommand.setId("1");
 
 		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(recipeCommand));
-		when(uomOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
+		when(uomOfMeasureService.listAllUoms()).thenReturn(Flux.just(UnitOfMeasureCommand.builder().id("1").build()));
 		
 		// When
-		mockMvc.perform(get("/recipe/1/ingredient/new"))
-		// Then
-			.andExpect(status().isOk())
-			.andExpect(view().name("recipe/ingredient/ingredient-form"))
-			.andExpect(model().attributeExists("ingredient"))
-			.andExpect(model().attributeExists("uomList"));
+		webTestClient
+			.get()
+			.uri("/recipe/1/ingredient/new")
+			.exchange()
+			.expectStatus().isOk();
 		verify(recipeService, times(1)).findCommandById(Mockito.anyString());
 	}
 	
@@ -119,25 +118,32 @@ class IngredientControllerTest {
 		command.setRecipeId("2");
 
 		when(ingredientService.saveIngredientCommand(Mockito.any(IngredientCommand.class))).thenReturn(Mono.just(command));
-		
-		// When
-		mockMvc.perform(
-				post("/recipe/1/ingredient")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.param("id", "3")
-				.param("description", "some string")
+
+		webTestClient
+			.post()
+			.uri("/recipe/1/ingredient")
+			.body(BodyInserters
+					.fromFormData("recipeId", "1")
+					.with("description", "some string")
+					.with("amount", "3")
+					.with("uom.id", "1")
 			)
-		// Then
-			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:/recipe/2/ingredient/3/show"));
+			.exchange()
+			.expectStatus().is3xxRedirection()
+			.expectHeader().location("/recipe/2/ingredient/3/show");
 	}
 
 	@Test
 	void deleteIngredient() throws Exception {
 		when(ingredientService.deleteById(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.empty());
-		mockMvc.perform(get("/recipe/2/ingredient/3/delete"))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:/recipe/2/ingredients"));
+		
+		webTestClient
+			.get()
+			.uri("/recipe/2/ingredient/3/delete")
+			.exchange()
+			.expectStatus().is3xxRedirection()
+			.expectHeader().location("/recipe/2/ingredients");
+		
 		verify(ingredientService, times(1)).deleteById(Mockito.anyString(), Mockito.anyString());
 	}
 }

@@ -3,6 +3,8 @@ package guru.springframework.recipeapp.domain;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +19,7 @@ import lombok.Setter;
 public class Ingredient {
 	
 	@Builder.Default
+	@Id
 	private String id = UUID.randomUUID().toString();
 	private String description;
 	private BigDecimal amount;
