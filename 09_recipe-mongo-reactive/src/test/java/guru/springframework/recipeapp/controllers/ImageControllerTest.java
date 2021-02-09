@@ -1,46 +1,33 @@
 package guru.springframework.recipeapp.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import guru.springframework.recipeapp.commands.RecipeCommand;
 import guru.springframework.recipeapp.service.ImageService;
 import guru.springframework.recipeapp.service.RecipeService;
 import reactor.core.publisher.Mono;
 
-@ExtendWith(MockitoExtension.class)
-@Disabled
+@ExtendWith(SpringExtension.class)
+@WebFluxTest(ImageController.class)
+@AutoConfigureWebTestClient(timeout = "36000")
 class ImageControllerTest {
 	
-	@Mock private ImageService imageService;
-	@Mock private RecipeService recipeService;
-	@InjectMocks private ImageController controller;
-	private MockMvc mockMvc;
-
-	@BeforeEach
-	void setUp() throws Exception {
-		mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new ControllerExceptionHandler()).build();
-	}
+	@MockBean private RecipeService recipeService;
+	@MockBean private ImageService imageService;
+	@Autowired private WebTestClient webTestClient;
 	
 	@Test
 	void imageForm() throws Exception {
@@ -50,45 +37,49 @@ class ImageControllerTest {
 		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(command));
 		
 		// When
-		mockMvc.perform(get("/recipe/1/image"))
-			.andExpect(status().isOk())
-			.andExpect(model().attributeExists("recipe"));
+		webTestClient
+		.get()
+		.uri("/recipe/1/image")
+		.exchange()
+		.expectStatus().isOk();
+		
 		// Then
 		verify(recipeService, times(1)).findCommandById(Mockito.anyString());
 	}
 
 	@Test
+	@Disabled
 	void handeImagePost() throws Exception {
-		when(imageService.saveImageFile(Mockito.anyString(), Mockito.any())).thenReturn(Mono.empty());
-		
-		MockMultipartFile multipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain", "Spring framework Guru".getBytes());
-		mockMvc.perform(multipart("/recipe/1/image").file(multipartFile))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(header().string("Location", "/recipe/1/show"));
-		verify(imageService, times(1)).saveImageFile(Mockito.anyString(), Mockito.any());
+//		when(imageService.saveImageFile(Mockito.anyString(), Mockito.any())).thenReturn(Mono.empty());
+//		
+//		MockMultipartFile multipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain", "Spring framework Guru".getBytes());
+//		mockMvc.perform(multipart("/recipe/1/image").file(multipartFile))
+//			.andExpect(status().is3xxRedirection())
+//			.andExpect(header().string("Location", "/recipe/1/show"));
+//		verify(imageService, times(1)).saveImageFile(Mockito.anyString(), Mockito.any());
 	}
 	
 	@Test
 	@Disabled
 	void renderImageFromDB() throws Exception {
 		// Given
-		RecipeCommand command = new RecipeCommand();
-		command.setId("1");
-		String s = "Fake image content";
-		Byte[] bytes = new Byte[s.getBytes().length];
-		int i = 0;
-		for(byte b : s.getBytes()) {
-			bytes[i++] = b;
-		}
-		command.setImage(bytes);
-		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(command));
-		// When
-		MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
-		// Then
-			.andExpect(status().isOk())
-			.andReturn().getResponse();
-		byte[] responseBytes = response.getContentAsByteArray();
-		assertEquals(s.getBytes().length, responseBytes.length);
+//		RecipeCommand command = new RecipeCommand();
+//		command.setId("1");
+//		String s = "Fake image content";
+//		Byte[] bytes = new Byte[s.getBytes().length];
+//		int i = 0;
+//		for(byte b : s.getBytes()) {
+//			bytes[i++] = b;
+//		}
+//		command.setImage(bytes);
+//		when(recipeService.findCommandById(Mockito.anyString())).thenReturn(Mono.just(command));
+//		// When
+//		MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
+//		// Then
+//			.andExpect(status().isOk())
+//			.andReturn().getResponse();
+//		byte[] responseBytes = response.getContentAsByteArray();
+//		assertEquals(s.getBytes().length, responseBytes.length);
 	}
 
 }

@@ -17,6 +17,7 @@ import guru.springframework.recipeapp.service.RecipeService;
 import guru.springframework.recipeapp.service.UnitOfMeasureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -36,6 +37,11 @@ public class IngredientController {
 		this.webDataBinder = webDataBinder;
 	}
 	
+	@ModelAttribute("uomList")
+	public Flux<UnitOfMeasureCommand> populateUnitOfMeasure() {
+		return uomOfMeasureService.listAllUoms();
+	}
+	
 	@GetMapping("/recipe/{id}/ingredients")
 	public String listIngredients(@PathVariable("id") String id, Model model) {
 		log.debug("Getting ingredient list for recipe id " + id);
@@ -52,7 +58,6 @@ public class IngredientController {
 	@GetMapping("/recipe/{recipeId}/ingredient/{id}/update")
 	public String updateRecipeIngredient(@PathVariable("recipeId") String recipeId, @PathVariable("id") String id, Model model) {
 		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id));
-		model.addAttribute("uomList", uomOfMeasureService.listAllUoms());
 		return INGREDIENT_INGREDIENT_FORM_URL;
 	}
 	
@@ -68,7 +73,6 @@ public class IngredientController {
 				ingredientCommand.setUom(new UnitOfMeasureCommand());
 				
 				model.addAttribute("ingredient", ingredientCommand);
-				model.addAttribute("uomList", uomOfMeasureService.listAllUoms());
 				return INGREDIENT_INGREDIENT_FORM_URL;
 			});
 	}
@@ -78,7 +82,6 @@ public class IngredientController {
 		webDataBinder.validate();
 		BindingResult bindingResult = webDataBinder.getBindingResult();
 		if(bindingResult.hasErrors()) {
-			model.addAttribute("uomList", uomOfMeasureService.listAllUoms());
 			bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
 			return Mono.just(INGREDIENT_INGREDIENT_FORM_URL);
 		}
