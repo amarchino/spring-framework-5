@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import guru.springframework.api.domain.User;
+import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -25,4 +26,10 @@ class ApiServiceImplTest {
 		assertEquals(size, users.size());
 	}
 
+	@Test
+	void getUsersFlux() {
+		Integer size = 1;
+		List<User> users = apiService.getUsers(Mono.just(size)).collectList().block();
+		assertEquals(size, users.size());
+	}
 }
