@@ -2,8 +2,10 @@ package guru.springframework.rest.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.api.domain.User;
 import guru.springframework.api.domain.UserData;
@@ -14,10 +16,14 @@ import lombok.RequiredArgsConstructor;
 public class ApiServiceImpl implements ApiService {
 
 	private final RestTemplate restTemplate;
-
+	@Value("${api.url}") private final String apiUrl;
+	
 	@Override
 	public List<User> getUsers(Integer limit) {
-		UserData userData = restTemplate.getForObject("http://private-anon-2da50522dc-apifaketory.apiary-mock.com/api/user?limit=" + limit, UserData.class);
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder
+				.fromUriString(apiUrl)
+				.queryParam("limit", limit);
+		UserData userData = restTemplate.getForObject(uriBuilder.toUriString(), UserData.class);
 		return userData.getData();
 	}
 
