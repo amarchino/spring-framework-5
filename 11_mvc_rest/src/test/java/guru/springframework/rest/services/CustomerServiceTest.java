@@ -25,6 +25,7 @@ class CustomerServiceTest {
 	private static final Long ID = 2L;
 	private static final String FIRSTNAME = "Jimmy";
 	private static final String LASTNAME = "Rogers";
+	private static final String CUSTOMER_URL = "/shop/customers/" + ID;
 	private CustomerService customerService;
 	@Mock private CustomerRepository customerRepository;
 
@@ -57,6 +58,7 @@ class CustomerServiceTest {
 		assertEquals(ID, customerDTO.getId());
 		assertEquals(FIRSTNAME, customerDTO.getFirstname());
 		assertEquals(LASTNAME, customerDTO.getLastname());
+		assertEquals(CUSTOMER_URL, customerDTO.getCustomerUrl());
 	}
 
 	@Test
@@ -72,5 +74,22 @@ class CustomerServiceTest {
 		assertEquals(ID, savedCustomerDTO.getId());
 		assertEquals(FIRSTNAME, savedCustomerDTO.getFirstname());
 		assertEquals(LASTNAME, savedCustomerDTO.getLastname());
+		assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
+	}
+	
+	@Test
+	void saveCustomerByDTO() {
+		CustomerDTO customerDTO = CustomerDTO.builder().firstname(FIRSTNAME).lastname(LASTNAME).build();
+		Customer savedCustomer = Customer.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
+		// Given
+		when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(savedCustomer);
+		// When
+		CustomerDTO savedCustomerDTO = customerService.saveCustomerByDTO(ID, customerDTO);
+		// Then
+		assertNotNull(savedCustomerDTO);
+		assertEquals(ID, savedCustomerDTO.getId());
+		assertEquals(FIRSTNAME, savedCustomerDTO.getFirstname());
+		assertEquals(LASTNAME, savedCustomerDTO.getLastname());
+		assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
 	}
 }

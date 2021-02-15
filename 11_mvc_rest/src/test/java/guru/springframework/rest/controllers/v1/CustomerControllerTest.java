@@ -3,6 +3,7 @@ package guru.springframework.rest.controllers.v1;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,6 +80,21 @@ class CustomerControllerTest {
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
 			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
 	}
-	
-	
+	@Test
+	public void updateCustomer() throws Exception {
+		CustomerDTO customerDTO = CustomerDTO.builder().firstname(FIRSTNAME).lastname(LASTNAME).build();
+		CustomerDTO savedCustomerDTO = CustomerDTO.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
+		when(customerService.saveCustomerByDTO(Mockito.anyLong(), Mockito.any(CustomerDTO.class))).thenReturn(savedCustomerDTO);
+		
+		mockMvc.perform(
+				put("/api/v1/customers/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(AbstractRestControllerTest.asJsonString(customerDTO))
+			)
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id", Matchers.equalTo(1)))
+			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
+			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
+			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
+	}
 }
