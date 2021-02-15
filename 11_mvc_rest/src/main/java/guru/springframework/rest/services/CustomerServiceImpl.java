@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import guru.springframework.rest.api.v1.mapper.CustomerMapper;
 import guru.springframework.rest.api.v1.model.CustomerDTO;
+import guru.springframework.rest.domain.Customer;
 import guru.springframework.rest.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,13 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.findById(id)
 				.map(customerMapper::customerToCustomerDTO)
 				.orElseThrow(() -> new RuntimeException("Not found: " + id));
+	}
+
+	@Override
+	public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+		Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
+		customer = customerRepository.save(customer);
+		return customerMapper.customerToCustomerDTO(customer);
 	}
 
 }

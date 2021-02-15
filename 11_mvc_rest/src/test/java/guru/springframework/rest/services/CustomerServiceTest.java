@@ -59,4 +59,18 @@ class CustomerServiceTest {
 		assertEquals(LASTNAME, customerDTO.getLastname());
 	}
 
+	@Test
+	void createNewCustomer() {
+		CustomerDTO customerDTO = CustomerDTO.builder().firstname(FIRSTNAME).lastname(LASTNAME).build();
+		Customer savedCustomer = Customer.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
+		// Given
+		when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(savedCustomer);
+		// When
+		CustomerDTO savedCustomerDTO = customerService.createNewCustomer(customerDTO);
+		// Then
+		assertNotNull(savedCustomerDTO);
+		assertEquals(ID, savedCustomerDTO.getId());
+		assertEquals(FIRSTNAME, savedCustomerDTO.getFirstname());
+		assertEquals(LASTNAME, savedCustomerDTO.getLastname());
+	}
 }

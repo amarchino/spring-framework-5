@@ -2,6 +2,7 @@ package guru.springframework.rest.controllers.v1;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,4 +62,23 @@ class CustomerControllerTest {
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
 			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
 	}
+	@Test
+	public void createNewCustomer() throws Exception {
+		CustomerDTO customerDTO = CustomerDTO.builder().firstname(FIRSTNAME).lastname(LASTNAME).build();
+		CustomerDTO savedCustomerDTO = CustomerDTO.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
+		when(customerService.createNewCustomer(Mockito.any(CustomerDTO.class))).thenReturn(savedCustomerDTO);
+		
+		mockMvc.perform(
+				post("/api/v1/customers")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(AbstractRestControllerTest.asJsonString(customerDTO))
+			)
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id", Matchers.equalTo(1)))
+			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
+			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
+			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
+	}
+	
+	
 }
