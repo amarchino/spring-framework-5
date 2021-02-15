@@ -26,7 +26,7 @@ import guru.springframework.rest.services.CategoryService;
 @ExtendWith(MockitoExtension.class)
 class CategoryControllerTest {
 	
-	public static final String NAME = "Jim";
+	private static final String NAME = "Jim";
 	@Mock private CategoryService categoryService;
 	@InjectMocks private CategoryController categoryController;
 	private	MockMvc mockMvc;
