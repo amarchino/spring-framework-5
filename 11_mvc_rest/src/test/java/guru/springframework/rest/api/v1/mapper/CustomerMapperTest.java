@@ -23,7 +23,7 @@ class CustomerMapperTest {
 		assertEquals(customer.getId(), customerDTO.getId());
 		assertEquals(customer.getFirstname(), customerDTO.getFirstname());
 		assertEquals(customer.getLastname(), customerDTO.getLastname());
-		assertEquals("/shop/customers/1", customerDTO.getCustomerUrl());
+		assertEquals("/api/v1/customers/" + 1, customerDTO.getCustomerUrl());
 	}
 
 	@Test

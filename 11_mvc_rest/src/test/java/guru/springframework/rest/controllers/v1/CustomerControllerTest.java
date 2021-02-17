@@ -52,7 +52,7 @@ class CustomerControllerTest {
 		);
 		when(customerService.getAllCustomers()).thenReturn(categories);
 		
-		mockMvc.perform(get("/api/v1/customers").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get(CustomerController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.customers", Matchers.hasSize(2)));
 	}
@@ -61,11 +61,11 @@ class CustomerControllerTest {
 		CustomerDTO customerDTO = CustomerDTO.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
 		when(customerService.getCustomerById(Mockito.anyLong())).thenReturn(customerDTO);
 		
-		mockMvc.perform(get("/api/v1/customers/" + ID).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get(CustomerController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
-			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
+			.andExpect(jsonPath("$.customer_url", Matchers.equalTo(CustomerController.BASE_URL + "/" + ID)));
 	}
 	@Test
 	public void createNewCustomer() throws Exception {
@@ -74,7 +74,7 @@ class CustomerControllerTest {
 		when(customerService.createNewCustomer(Mockito.any(CustomerDTO.class))).thenReturn(savedCustomerDTO);
 		
 		mockMvc.perform(
-				post("/api/v1/customers")
+				post(CustomerController.BASE_URL)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(customerDTO))
 			)
@@ -82,7 +82,7 @@ class CustomerControllerTest {
 			.andExpect(jsonPath("$.id", Matchers.equalTo(1)))
 			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
-			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
+			.andExpect(jsonPath("$.customer_url", Matchers.equalTo(CustomerController.BASE_URL + "/" + ID)));
 	}
 	@Test
 	public void updateCustomer() throws Exception {
@@ -91,7 +91,7 @@ class CustomerControllerTest {
 		when(customerService.saveCustomerByDTO(Mockito.anyLong(), Mockito.any(CustomerDTO.class))).thenReturn(savedCustomerDTO);
 		
 		mockMvc.perform(
-				put("/api/v1/customers/1")
+				put(CustomerController.BASE_URL + "/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(customerDTO))
 			)
@@ -99,7 +99,7 @@ class CustomerControllerTest {
 			.andExpect(jsonPath("$.id", Matchers.equalTo(1)))
 			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
-			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
+			.andExpect(jsonPath("$.customer_url", Matchers.equalTo(CustomerController.BASE_URL + "/" + ID)));
 	}
 	@Test
 	public void patchCustomer() throws Exception {
@@ -108,7 +108,7 @@ class CustomerControllerTest {
 		when(customerService.patchCustomer(Mockito.anyLong(), Mockito.any(CustomerDTO.class))).thenReturn(returnCustomerDTO);
 		
 		mockMvc.perform(
-				patch("/api/v1/customers/1")
+				patch(CustomerController.BASE_URL + "/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(customerDTO))
 			)
@@ -116,12 +116,12 @@ class CustomerControllerTest {
 			.andExpect(jsonPath("$.id", Matchers.equalTo(1)))
 			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
-			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
+			.andExpect(jsonPath("$.customer_url", Matchers.equalTo(CustomerController.BASE_URL + "/" + ID)));
 	}
 
 	@Test
 	public void deleteCustomer() throws Exception {
-		mockMvc.perform(delete("/api/v1/customers/1"))
+		mockMvc.perform(delete(CustomerController.BASE_URL + "/" + ID))
 			.andExpect(status().isOk());
 		verify(customerService, times(1)).deleteCustomerById(Mockito.anyLong());
 	}

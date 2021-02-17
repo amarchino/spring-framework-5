@@ -13,10 +13,12 @@ import guru.springframework.rest.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/api/v1/categories")
+@RequestMapping(CategoryController.BASE_URL)
+//@RequestMapping("${some.url.value}")
 @RequiredArgsConstructor
 public class CategoryController {
 	
+	public static final String BASE_URL = "/api/v1/categories";
 	private final CategoryService categoryService;
 	
 	@GetMapping

@@ -27,7 +27,7 @@ class CustomerServiceTest {
 	private static final Long ID = 2L;
 	private static final String FIRSTNAME = "Jimmy";
 	private static final String LASTNAME = "Rogers";
-	private static final String CUSTOMER_URL = "/shop/customers/" + ID;
+	private static final String CUSTOMER_URL = "/api/v1/customers/" + ID;
 	private CustomerService customerService;
 	@Mock private CustomerRepository customerRepository;
 
