@@ -1,6 +1,9 @@
 package guru.springframework.rest.controllers.v1;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -116,4 +119,10 @@ class CustomerControllerTest {
 			.andExpect(jsonPath("$.customer_url", Matchers.equalTo("/shop/customers/" + ID)));
 	}
 
+	@Test
+	public void deleteCustomer() throws Exception {
+		mockMvc.perform(delete("/api/v1/customers/1"))
+			.andExpect(status().isOk());
+		verify(customerService, times(1)).deleteCustomerById(Mockito.anyLong());
+	}
 }

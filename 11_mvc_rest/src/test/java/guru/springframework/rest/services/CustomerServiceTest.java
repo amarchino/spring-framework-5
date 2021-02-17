@@ -2,6 +2,8 @@ package guru.springframework.rest.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -91,5 +93,11 @@ class CustomerServiceTest {
 		assertEquals(FIRSTNAME, savedCustomerDTO.getFirstname());
 		assertEquals(LASTNAME, savedCustomerDTO.getLastname());
 		assertEquals(CUSTOMER_URL, savedCustomerDTO.getCustomerUrl());
+	}
+	
+	@Test
+	void deleteCustomerById() {
+		customerService.deleteCustomerById(ID);
+		verify(customerRepository, times(1)).deleteById(Mockito.anyLong());
 	}
 }
