@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryDTO getCategoryByName(String name) {
 		return categoryRepository.findByName(name)
 				.map(categoryMapper::categoryToCategoryDTO)
-				.get();
+				.orElseThrow(ResourceNotFoundException::new);
 	}
 
 }
