@@ -19,6 +19,7 @@ import guru.springframework.rest.bootstrap.Bootstrap;
 import guru.springframework.rest.domain.Customer;
 import guru.springframework.rest.repositories.CategoryRepository;
 import guru.springframework.rest.repositories.CustomerRepository;
+import guru.springframework.rest.repositories.VendorRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
@@ -28,13 +29,14 @@ public class CustomerServiceIT {
 
 	@Autowired private CustomerRepository customerRepository;
 	@Autowired private CategoryRepository categoryRepository;
+	@Autowired private VendorRepository vendorRepository;
 	private CustomerService customerService;
 	
 	@BeforeEach
 	public void setUp() throws Exception {
 		log.info("Loading customer data: " + customerRepository.count());
 		
-		Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+		Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
 		bootstrap.run();
 		
 		customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);

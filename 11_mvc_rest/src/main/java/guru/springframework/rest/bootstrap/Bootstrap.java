@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component;
 
 import guru.springframework.rest.domain.Category;
 import guru.springframework.rest.domain.Customer;
+import guru.springframework.rest.domain.Vendor;
 import guru.springframework.rest.repositories.CategoryRepository;
 import guru.springframework.rest.repositories.CustomerRepository;
+import guru.springframework.rest.repositories.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,12 +19,13 @@ public class Bootstrap implements CommandLineRunner {
 
 	private final CategoryRepository categoryRepository;
 	private final CustomerRepository customerRepository;
+	private final VendorRepository vendorRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
 		initializeCategories();
 		initializeCustomers();
-		
+		initializeVendors();
 	}
 
 	private void initializeCategories() {
@@ -39,5 +42,13 @@ public class Bootstrap implements CommandLineRunner {
 		customerRepository.save(Customer.builder().firstname("Raj").lastname("Ram").build());
 		customerRepository.save(Customer.builder().firstname("Rob").lastname("Axe").build());
 		log.info("Customers Loaded = " + customerRepository.count());
+	}
+	
+	private void initializeVendors() {
+		vendorRepository.save(Vendor.builder().name("Western Tasty Fruits Ltd.").build());
+		vendorRepository.save(Vendor.builder().name("Exotic Fruits Company").build());
+		vendorRepository.save(Vendor.builder().name("Home Fruits").build());
+		vendorRepository.save(Vendor.builder().name("Fun Fresh Fruits Ltd.").build());
+		log.info("Vendors Loaded = " + vendorRepository.count());
 	}
 }
