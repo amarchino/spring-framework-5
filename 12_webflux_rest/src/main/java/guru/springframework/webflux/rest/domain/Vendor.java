@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Vendor {
 
 	@Id
 	private String id;
-	private String description;
+	private String name;
 }
