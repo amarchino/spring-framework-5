@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import guru.springframework.rest.api.v1.model.CustomerDTO;
 import guru.springframework.rest.api.v1.model.CustomerListDTO;
 import guru.springframework.rest.services.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(description = "This is my customer controller", name = "CustomerController")
 @RestController
 @RequestMapping(CustomerController.BASE_URL)
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class CustomerController {
 	public static final String BASE_URL = "/api/v1/customers";
 	private final CustomerService customerService;
 	
+	@Operation(summary = "This will get a list of customers.", description = "These are some notes about the API.")
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
 	public CustomerListDTO getAllCustomers() {
