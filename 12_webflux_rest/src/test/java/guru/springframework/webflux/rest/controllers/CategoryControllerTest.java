@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivestreams.Publisher;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 
 import guru.springframework.webflux.rest.domain.Category;
 import guru.springframework.webflux.rest.repositories.CategoryRepository;
@@ -74,4 +73,18 @@ public class CategoryControllerTest {
 			.expectStatus().isCreated();
 	}
 
+	@Test
+	void update() {
+		BDDMockito.given(repository.save(Mockito.any(Category.class)))
+		.willReturn(Mono.just(
+			Category.builder().id("1").description("Category 1").build()
+		));
+		Mono<Category> category = Mono.just(Category.builder().description("Some category").build());
+		webTestClient.put()
+			.uri(CategoryController.BASE_URL + "/1")
+			.body(category, Category.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+	}
 }
