@@ -10,21 +10,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import guru.springframework.webflux.rest.domain.Category;
-import guru.springframework.webflux.rest.repositories.CategoryRepository;
+import guru.springframework.webflux.rest.domain.Vendor;
+import guru.springframework.webflux.rest.repositories.VendorRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryControllerTest {
+public class VendorControllerTest {
 	
-	@Mock private CategoryRepository repository;
-	private CategoryController controller;
+	@Mock private VendorRepository repository;
+	private VendorController controller;
 	private WebTestClient webTestClient;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		controller = new CategoryController(repository);
+		controller = new VendorController(repository);
 		webTestClient = WebTestClient.bindToController(controller).build();
 	}
 
@@ -32,29 +32,29 @@ public class CategoryControllerTest {
 	void list() {
 		BDDMockito.given(repository.findAll())
 			.willReturn(Flux.just(
-				Category.builder().id("1").description("Category 1").build(),
-				Category.builder().id("2").description("Category 2").build()
+				Vendor.builder().id("1").name("Vendor 1").build(),
+				Vendor.builder().id("2").name("Vendor 2").build()
 			));
 		webTestClient.get()
-			.uri(CategoryController.BASE_URL)
+			.uri(VendorController.BASE_URL)
 			.accept(MediaType.APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isOk()
-			.expectBodyList(Category.class).hasSize(2);
+			.expectBodyList(Vendor.class).hasSize(2);
 	}
 
 	@Test
 	void getById() {
 		BDDMockito.given(repository.findById(Mockito.anyString()))
 		.willReturn(Mono.just(
-			Category.builder().id("1").description("Category 1").build()
+			Vendor.builder().id("1").name("Vendor 1").build()
 		));
 	webTestClient.get()
-		.uri(CategoryController.BASE_URL + "/1")
+		.uri(VendorController.BASE_URL + "/1")
 		.accept(MediaType.APPLICATION_JSON)
 		.exchange()
 		.expectStatus().isOk()
-		.expectBody(Category.class);
+		.expectBody(Vendor.class);
 	}
 
 }
