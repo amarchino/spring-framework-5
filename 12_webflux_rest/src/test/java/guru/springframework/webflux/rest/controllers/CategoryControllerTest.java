@@ -1,5 +1,9 @@
 package guru.springframework.webflux.rest.controllers;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,5 +90,43 @@ public class CategoryControllerTest {
 			.accept(MediaType.APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isOk();
+	}
+	
+	@Test
+	void patch() {
+		BDDMockito.given(repository.findById(Mockito.anyString()))
+		.willReturn(Mono.just(
+			Category.builder().id("1").description("Category 1").build()
+		));
+		
+		BDDMockito.given(repository.save(Mockito.any(Category.class)))
+		.willReturn(Mono.just(
+			Category.builder().id("1").description("Some category").build()
+		));
+		Mono<Category> category = Mono.just(Category.builder().description("Some category").build());
+		webTestClient.patch()
+			.uri(CategoryController.BASE_URL + "/1")
+			.body(category, Category.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+		verify(repository, times(1)).save(Mockito.any(Category.class));
+	}
+	
+	@Test
+	void patchNoop() {
+		BDDMockito.given(repository.findById(Mockito.anyString()))
+		.willReturn(Mono.just(
+			Category.builder().id("1").description("Category 1").build()
+		));
+		
+		Mono<Category> category = Mono.just(Category.builder().description("Category 1").build());
+		webTestClient.patch()
+			.uri(CategoryController.BASE_URL + "/1")
+			.body(category, Category.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+		verify(repository, never()).save(Mockito.any(Category.class));
 	}
 }

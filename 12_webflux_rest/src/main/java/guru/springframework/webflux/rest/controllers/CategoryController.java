@@ -3,6 +3,7 @@ package guru.springframework.webflux.rest.controllers;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,5 +45,16 @@ public class CategoryController {
 	public Mono<Category> update(@PathVariable String id, @RequestBody Category category) {
 		category.setId(id);
 		return categoryRepository.save(category);
+	}
+	
+	@PatchMapping("/{id}")
+	public Mono<Category> patch(@PathVariable String id, @RequestBody Category category) {
+		return categoryRepository.findById(id)
+			.flatMap(c -> {
+				if(!category.getDescription().equals(c.getDescription())) {
+					return categoryRepository.save(c);
+				}
+				return Mono.just(c);
+			});
 	}
 }
