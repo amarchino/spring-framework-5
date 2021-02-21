@@ -46,7 +46,7 @@ class VendorControllerWebMvcTest {
 		);
 		when(vendorService.getAllVendors()).thenReturn(categories);
 		
-		mockMvc.perform(get(VendorController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get(VendorController.BASE_URL).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.vendors", Matchers.hasSize(2)));
 	}
@@ -55,7 +55,7 @@ class VendorControllerWebMvcTest {
 		VendorDTO vendorDTO = VendorDTO.builder().id(ID).name(NAME).build();
 		when(vendorService.getVendorById(Mockito.anyLong())).thenReturn(vendorDTO);
 		
-		mockMvc.perform(get(VendorController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get(VendorController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.name", Matchers.equalTo(NAME)))
 			.andExpect(jsonPath("$.vendor_url", Matchers.equalTo(VendorController.BASE_URL + "/" + ID)));
@@ -75,6 +75,7 @@ class VendorControllerWebMvcTest {
 		mockMvc.perform(
 				post(VendorController.BASE_URL)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(vendorDTO))
 			)
 			.andExpect(status().isCreated())
@@ -91,6 +92,7 @@ class VendorControllerWebMvcTest {
 		mockMvc.perform(
 				put(VendorController.BASE_URL + "/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(vendorDTO))
 			)
 			.andExpect(status().isOk())
@@ -107,6 +109,7 @@ class VendorControllerWebMvcTest {
 		mockMvc.perform(
 				patch(VendorController.BASE_URL + "/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(vendorDTO))
 			)
 			.andExpect(status().isOk())
@@ -118,7 +121,7 @@ class VendorControllerWebMvcTest {
 	@Test
 	public void deleteVendor() throws Exception {
 		mockMvc.perform(delete(VendorController.BASE_URL + "/" + ID))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 		verify(vendorService, times(1)).deleteVendorById(Mockito.anyLong());
 	}
 }

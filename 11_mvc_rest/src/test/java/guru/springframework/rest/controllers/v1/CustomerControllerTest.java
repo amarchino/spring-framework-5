@@ -56,7 +56,7 @@ class CustomerControllerTest {
 		);
 		when(customerService.getAllCustomers()).thenReturn(categories);
 		
-		mockMvc.perform(get(CustomerController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get(CustomerController.BASE_URL).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.customers", Matchers.hasSize(2)));
 	}
@@ -65,7 +65,7 @@ class CustomerControllerTest {
 		CustomerDTO customerDTO = CustomerDTO.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
 		when(customerService.getCustomerById(Mockito.anyLong())).thenReturn(customerDTO);
 		
-		mockMvc.perform(get(CustomerController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get(CustomerController.BASE_URL + "/" + ID).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.firstname", Matchers.equalTo(FIRSTNAME)))
 			.andExpect(jsonPath("$.lastname", Matchers.equalTo(LASTNAME)))
@@ -86,6 +86,7 @@ class CustomerControllerTest {
 		mockMvc.perform(
 				post(CustomerController.BASE_URL)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(customerDTO))
 			)
 			.andExpect(status().isCreated())
@@ -103,6 +104,7 @@ class CustomerControllerTest {
 		mockMvc.perform(
 				put(CustomerController.BASE_URL + "/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(customerDTO))
 			)
 			.andExpect(status().isOk())
@@ -120,6 +122,7 @@ class CustomerControllerTest {
 		mockMvc.perform(
 				patch(CustomerController.BASE_URL + "/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(AbstractRestControllerTest.asJsonString(customerDTO))
 			)
 			.andExpect(status().isOk())

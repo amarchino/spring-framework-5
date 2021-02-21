@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(description = "This is my vendor controller", name = "VendorController")
 @RestController
-@RequestMapping(name = VendorController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = VendorController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class VendorController {
 	public static final String BASE_URL = "/api/v1/vendors";
