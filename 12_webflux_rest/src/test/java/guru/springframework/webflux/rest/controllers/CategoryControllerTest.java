@@ -7,8 +7,10 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.reactivestreams.Publisher;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import guru.springframework.webflux.rest.domain.Category;
 import guru.springframework.webflux.rest.repositories.CategoryRepository;
@@ -49,12 +51,27 @@ public class CategoryControllerTest {
 		.willReturn(Mono.just(
 			Category.builder().id("1").description("Category 1").build()
 		));
-	webTestClient.get()
-		.uri(CategoryController.BASE_URL + "/1")
-		.accept(MediaType.APPLICATION_JSON)
-		.exchange()
-		.expectStatus().isOk()
-		.expectBody(Category.class);
+		webTestClient.get()
+			.uri(CategoryController.BASE_URL + "/1")
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(Category.class);
+	}
+	
+	@Test
+	void create() {
+		BDDMockito.given(repository.saveAll(Mockito.any(Publisher.class)))
+		.willReturn(Flux.just(
+			Category.builder().id("1").description("Category 1").build()
+		));
+		Mono<Category> category = Mono.just(Category.builder().description("Some category").build());
+		webTestClient.post()
+			.uri(CategoryController.BASE_URL)
+			.body(category, Category.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isCreated();
 	}
 
 }
