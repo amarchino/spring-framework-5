@@ -7,6 +7,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.reactivestreams.Publisher;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -49,12 +50,42 @@ public class VendorControllerTest {
 		.willReturn(Mono.just(
 			Vendor.builder().id("1").name("Vendor 1").build()
 		));
-	webTestClient.get()
-		.uri(VendorController.BASE_URL + "/1")
-		.accept(MediaType.APPLICATION_JSON)
-		.exchange()
-		.expectStatus().isOk()
-		.expectBody(Vendor.class);
+		webTestClient.get()
+			.uri(VendorController.BASE_URL + "/1")
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(Vendor.class);
+	}
+	
+	@Test
+	void create() {
+		BDDMockito.given(repository.saveAll(Mockito.any(Publisher.class)))
+		.willReturn(Flux.just(
+			Vendor.builder().id("1").name("Vendor 1").build()
+		));
+		Mono<Vendor> vendor = Mono.just(Vendor.builder().name("Some vendor").build());
+		webTestClient.post()
+			.uri(VendorController.BASE_URL)
+			.body(vendor, Vendor.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isCreated();
+	}
+
+	@Test
+	void update() {
+		BDDMockito.given(repository.save(Mockito.any(Vendor.class)))
+		.willReturn(Mono.just(
+			Vendor.builder().id("1").name("Vendor 1").build()
+		));
+		Mono<Vendor> vendor = Mono.just(Vendor.builder().name("Some vendor").build());
+		webTestClient.put()
+			.uri(VendorController.BASE_URL + "/1")
+			.body(vendor, Vendor.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
 	}
 
 }
