@@ -3,6 +3,7 @@ package guru.springframework.webflux.rest.controllers;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,5 +45,17 @@ public class VendorController {
 	public Mono<Vendor> update(@PathVariable String id, @RequestBody Vendor vendor) {
 		vendor.setId(id);
 		return vendorRepository.save(vendor);
+	}
+
+	@PatchMapping("/{id}")
+	public Mono<Vendor> patch(@PathVariable String id, @RequestBody Vendor vendor) {
+		return vendorRepository.findById(id)
+			.flatMap(v -> {
+				if(!v.getName().equals(vendor.getName())) {
+					v.setName(vendor.getName());
+					return vendorRepository.save(v);
+				}
+				return Mono.just(v);
+			});
 	}
 }

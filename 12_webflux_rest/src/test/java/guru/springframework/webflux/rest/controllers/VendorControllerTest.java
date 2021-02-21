@@ -1,5 +1,9 @@
 package guru.springframework.webflux.rest.controllers;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,4 +92,41 @@ public class VendorControllerTest {
 			.expectStatus().isOk();
 	}
 
+	@Test
+	void patch() {
+		BDDMockito.given(repository.findById(Mockito.anyString()))
+		.willReturn(Mono.just(
+			Vendor.builder().id("1").name("Vendor 1").build()
+		));
+		
+		BDDMockito.given(repository.save(Mockito.any(Vendor.class)))
+		.willReturn(Mono.just(
+			Vendor.builder().id("1").name("Some vendor").build()
+		));
+		Mono<Vendor> vendor = Mono.just(Vendor.builder().name("Some vendor").build());
+		webTestClient.patch()
+			.uri(VendorController.BASE_URL + "/1")
+			.body(vendor, Vendor.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+		verify(repository, times(1)).save(Mockito.any(Vendor.class));
+	}
+	
+	@Test
+	void patchNoop() {
+		BDDMockito.given(repository.findById(Mockito.anyString()))
+		.willReturn(Mono.just(
+			Vendor.builder().id("1").name("Vendor 1").build()
+		));
+		
+		Mono<Vendor> vendor = Mono.just(Vendor.builder().name("Vendor 1").build());
+		webTestClient.patch()
+			.uri(VendorController.BASE_URL + "/1")
+			.body(vendor, Vendor.class)
+			.accept(MediaType.APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+		verify(repository, never()).save(Mockito.any(Vendor.class));
+	}
 }

@@ -51,7 +51,8 @@ public class CategoryController {
 	public Mono<Category> patch(@PathVariable String id, @RequestBody Category category) {
 		return categoryRepository.findById(id)
 			.flatMap(c -> {
-				if(!category.getDescription().equals(c.getDescription())) {
+				if(!c.getDescription().equals(category.getDescription())) {
+					c.setDescription(category.getDescription());
 					return categoryRepository.save(c);
 				}
 				return Mono.just(c);
