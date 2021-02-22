@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import guru.springframework.rest.api.v1.model.CategoryDTO;
+import guru.springframework.model.CategoryDTO;
 import guru.springframework.rest.services.CategoryService;
 import guru.springframework.rest.services.ResourceNotFoundException;
 
@@ -31,6 +31,7 @@ class CategoryControllerTest {
 	@Mock private CategoryService categoryService;
 	@InjectMocks private CategoryController categoryController;
 	private	MockMvc mockMvc;
+	private CategoryDTO categoryDTO;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -38,13 +39,16 @@ class CategoryControllerTest {
 				.standaloneSetup(categoryController)
 				.setControllerAdvice(new RestResponseEntityExceptionHandler())
 				.build();
+		categoryDTO = new CategoryDTO();
+		categoryDTO.setId(1L);
+		categoryDTO.setName(NAME);
 	}
 
 	@Test
 	public void getAllCategories() throws Exception {
 		List<CategoryDTO> categories = Arrays.asList(
-			CategoryDTO.builder().id(1L).name(NAME).build(),
-			CategoryDTO.builder().id(2L).name("Bob").build()
+			categoryDTO,
+			categoryDTO
 		);
 		when(categoryService.getAllCategories()).thenReturn(categories);
 		
@@ -54,7 +58,6 @@ class CategoryControllerTest {
 	}
 	@Test
 	public void getCategoryByName() throws Exception {
-		CategoryDTO categoryDTO = CategoryDTO.builder().id(1L).name(NAME).build();
 		when(categoryService.getCategoryByName(Mockito.anyString())).thenReturn(categoryDTO);
 		
 		mockMvc.perform(get(CategoryController.BASE_URL + "/" + NAME).accept(MediaType.APPLICATION_JSON))

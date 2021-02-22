@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import guru.springframework.rest.api.v1.model.VendorDTO;
+import guru.springframework.model.VendorDTO;
 import guru.springframework.rest.domain.Vendor;
 
 class VendorMapperTest {
@@ -30,7 +30,9 @@ class VendorMapperTest {
 	@Test
 	void vendorDTOToVendor() {
 		// Given
-		VendorDTO vendorDTO = VendorDTO.builder().name(NAME).id(1L).build();
+		VendorDTO vendorDTO = new VendorDTO();
+		vendorDTO.setName(NAME);
+		vendorDTO.setId(1L);
 		// When
 		Vendor vendor = mapper.vendorDTOToVendor(vendorDTO);
 		// Then

@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import guru.springframework.model.CustomerDTO;
 import guru.springframework.rest.api.v1.mapper.CustomerMapper;
-import guru.springframework.rest.api.v1.model.CustomerDTO;
 import guru.springframework.rest.bootstrap.Bootstrap;
 import guru.springframework.rest.domain.Customer;
 import guru.springframework.rest.repositories.CategoryRepository;
@@ -52,7 +52,8 @@ public class CustomerServiceIT {
 		String originalFirstName = originalCustomer.getFirstname();
 		String originalLastName = originalCustomer.getLastname();
 		
-		CustomerDTO customerDTO = CustomerDTO.builder().firstname(updatedName).build();
+		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setFirstname(updatedName);
 		customerService.patchCustomer(id, customerDTO);
 		
 		Customer updatedCustomer = customerRepository.getOne(id);
@@ -71,7 +72,8 @@ public class CustomerServiceIT {
 		String originalFirstName = originalCustomer.getFirstname();
 		String originalLastName = originalCustomer.getLastname();
 		
-		CustomerDTO customerDTO = CustomerDTO.builder().lastname(updatedName).build();
+		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setLastname(updatedName);
 		customerService.patchCustomer(id, customerDTO);
 		
 		Customer updatedCustomer = customerRepository.getOne(id);

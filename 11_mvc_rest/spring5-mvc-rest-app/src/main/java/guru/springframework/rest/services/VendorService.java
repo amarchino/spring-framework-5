@@ -2,7 +2,7 @@ package guru.springframework.rest.services;
 
 import java.util.List;
 
-import guru.springframework.rest.api.v1.model.VendorDTO;
+import guru.springframework.model.VendorDTO;
 
 public interface VendorService {
 

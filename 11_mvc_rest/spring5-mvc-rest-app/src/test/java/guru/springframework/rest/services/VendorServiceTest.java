@@ -17,8 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import guru.springframework.model.VendorDTO;
 import guru.springframework.rest.api.v1.mapper.VendorMapper;
-import guru.springframework.rest.api.v1.model.VendorDTO;
 import guru.springframework.rest.domain.Vendor;
 import guru.springframework.rest.repositories.VendorRepository;
 
@@ -29,10 +29,13 @@ class VendorServiceTest {
 	private static final String VENDOR_URL = "/api/v1/vendors/" + ID;
 	private VendorService vendorService;
 	@Mock private VendorRepository vendorRepository;
+	private VendorDTO vendorDTO;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		vendorService = new VendorServiceImpl(VendorMapper.INSTANCE, vendorRepository);
+		vendorDTO = new VendorDTO();
+		vendorDTO.setName(NAME);
 	}
 
 	@Test
@@ -63,7 +66,7 @@ class VendorServiceTest {
 
 	@Test
 	void createNewVendor() {
-		VendorDTO vendorDTO = VendorDTO.builder().name(NAME).build();
+		
 		Vendor savedVendor = Vendor.builder().id(ID).name(NAME).build();
 		// Given
 		when(vendorRepository.save(Mockito.any(Vendor.class))).thenReturn(savedVendor);
@@ -78,7 +81,6 @@ class VendorServiceTest {
 	
 	@Test
 	void saveVendorByDTO() {
-		VendorDTO vendorDTO = VendorDTO.builder().name(NAME).build();
 		Vendor savedVendor = Vendor.builder().id(ID).name(NAME).build();
 		// Given
 		when(vendorRepository.save(Mockito.any(Vendor.class))).thenReturn(savedVendor);

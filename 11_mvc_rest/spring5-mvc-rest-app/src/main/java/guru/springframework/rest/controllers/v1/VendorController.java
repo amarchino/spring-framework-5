@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import guru.springframework.rest.api.v1.model.VendorDTO;
-import guru.springframework.rest.api.v1.model.VendorListDTO;
+import guru.springframework.model.VendorDTO;
+import guru.springframework.model.VendorListDTO;
 import guru.springframework.rest.services.VendorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,9 @@ public class VendorController {
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
 	public VendorListDTO getAllVendors() {
-		return new VendorListDTO(vendorService.getAllVendors());
+		VendorListDTO vendorListDTO = new VendorListDTO();
+		vendorListDTO.getVendors().addAll(vendorService.getAllVendors());
+		return vendorListDTO;
 	}
 
 	@Operation(summary = "This will get a vendor by its id.")

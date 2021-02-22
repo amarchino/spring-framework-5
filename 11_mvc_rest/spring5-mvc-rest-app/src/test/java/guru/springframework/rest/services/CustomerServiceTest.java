@@ -17,8 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import guru.springframework.model.CustomerDTO;
 import guru.springframework.rest.api.v1.mapper.CustomerMapper;
-import guru.springframework.rest.api.v1.model.CustomerDTO;
 import guru.springframework.rest.domain.Customer;
 import guru.springframework.rest.repositories.CustomerRepository;
 
@@ -30,10 +30,15 @@ class CustomerServiceTest {
 	private static final String CUSTOMER_URL = "/api/v1/customers/" + ID;
 	private CustomerService customerService;
 	@Mock private CustomerRepository customerRepository;
+	
+	private CustomerDTO customerDTO;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);
+		customerDTO = new CustomerDTO();
+		customerDTO.setFirstname(FIRSTNAME);
+		customerDTO.setLastname(LASTNAME);
 	}
 
 	@Test
@@ -65,7 +70,6 @@ class CustomerServiceTest {
 
 	@Test
 	void createNewCustomer() {
-		CustomerDTO customerDTO = CustomerDTO.builder().firstname(FIRSTNAME).lastname(LASTNAME).build();
 		Customer savedCustomer = Customer.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
 		// Given
 		when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(savedCustomer);
@@ -81,7 +85,6 @@ class CustomerServiceTest {
 	
 	@Test
 	void saveCustomerByDTO() {
-		CustomerDTO customerDTO = CustomerDTO.builder().firstname(FIRSTNAME).lastname(LASTNAME).build();
 		Customer savedCustomer = Customer.builder().id(ID).firstname(FIRSTNAME).lastname(LASTNAME).build();
 		// Given
 		when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(savedCustomer);

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import guru.springframework.rest.api.v1.model.CategoryDTO;
+import guru.springframework.model.CategoryDTO;
 import guru.springframework.rest.domain.Category;
 
 class CategoryMapperTest {
@@ -25,7 +25,9 @@ class CategoryMapperTest {
 	@Test
 	void categoryDTOToCategory() {
 		// Given
-		CategoryDTO categoryDTO = CategoryDTO.builder().name("Joe").id(1L).build();
+		CategoryDTO categoryDTO = new CategoryDTO();
+		categoryDTO.setName("Joe");
+		categoryDTO.setId(1L);
 		// When
 		Category category = categoryMapper.categoryDTOToCategory(categoryDTO);
 		// Then

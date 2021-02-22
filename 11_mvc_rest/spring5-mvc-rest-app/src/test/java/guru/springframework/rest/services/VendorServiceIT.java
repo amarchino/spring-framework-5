@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import guru.springframework.model.VendorDTO;
 import guru.springframework.rest.api.v1.mapper.VendorMapper;
-import guru.springframework.rest.api.v1.model.VendorDTO;
 import guru.springframework.rest.bootstrap.Bootstrap;
 import guru.springframework.rest.domain.Vendor;
 import guru.springframework.rest.repositories.CategoryRepository;
@@ -51,7 +51,8 @@ public class VendorServiceIT {
 		assertNotNull(originalVendor);
 		String originalName = originalVendor.getName();
 		
-		VendorDTO vendorDTO = VendorDTO.builder().name(updatedName).build();
+		VendorDTO vendorDTO = new VendorDTO();
+		vendorDTO.setName(updatedName);
 		vendorService.patchVendor(id, vendorDTO);
 		
 		Vendor updatedVendor = vendorRepository.getOne(id);

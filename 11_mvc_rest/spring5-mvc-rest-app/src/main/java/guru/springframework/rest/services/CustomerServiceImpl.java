@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import guru.springframework.model.CustomerDTO;
 import guru.springframework.rest.api.v1.mapper.CustomerMapper;
-import guru.springframework.rest.api.v1.model.CustomerDTO;
 import guru.springframework.rest.domain.Customer;
 import guru.springframework.rest.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;

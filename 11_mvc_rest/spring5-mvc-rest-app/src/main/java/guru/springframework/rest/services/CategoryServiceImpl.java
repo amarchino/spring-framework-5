@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import guru.springframework.model.CategoryDTO;
 import guru.springframework.rest.api.v1.mapper.CategoryMapper;
-import guru.springframework.rest.api.v1.model.CategoryDTO;
 import guru.springframework.rest.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import guru.springframework.rest.api.v1.model.CustomerDTO;
+import guru.springframework.model.CustomerDTO;
 import guru.springframework.rest.domain.Customer;
 
 class CustomerMapperTest {
@@ -29,7 +29,10 @@ class CustomerMapperTest {
 	@Test
 	void customerDTOToCustomer() {
 		// Given
-		CustomerDTO customerDTO = CustomerDTO.builder().firstname("John").lastname("Doe").id(1L).build();
+		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setFirstname("John");
+		customerDTO.setLastname("Doe");
+		customerDTO.setId(1L);
 		// When
 		Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
 		// Then
