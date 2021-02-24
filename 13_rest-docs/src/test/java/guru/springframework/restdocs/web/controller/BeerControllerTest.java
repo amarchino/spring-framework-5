@@ -79,10 +79,25 @@ public class BeerControllerTest {
         BeerDto beerDto =  getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
-        mockMvc.perform(post(BeerController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(beerDtoJson))
-                .andExpect(status().isCreated());
+        mockMvc.perform(
+        	post(BeerController.BASE_URL)
+        	.contentType(MediaType.APPLICATION_JSON)
+        	.content(beerDtoJson)
+        )
+        .andExpect(status().isCreated())
+        .andDo(document("v1/beer",
+        	PayloadDocumentation.requestFields(
+        		PayloadDocumentation.fieldWithPath("id").ignored(),
+        		PayloadDocumentation.fieldWithPath("version").ignored(),
+        		PayloadDocumentation.fieldWithPath("createdDate").ignored(),
+        		PayloadDocumentation.fieldWithPath("lastModifiedDate").ignored(),
+        		PayloadDocumentation.fieldWithPath("beerName").description("Beer name"),
+        		PayloadDocumentation.fieldWithPath("beerStyle").description("beer style"),
+        		PayloadDocumentation.fieldWithPath("upc").description("UPC of beer").attributes(),
+        		PayloadDocumentation.fieldWithPath("price").description("Price"),
+        		PayloadDocumentation.fieldWithPath("quantityOnHand").ignored()
+        	)
+        ));
     }
 
     @Test
