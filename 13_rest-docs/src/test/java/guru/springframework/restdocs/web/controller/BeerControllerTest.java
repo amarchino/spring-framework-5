@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -44,7 +45,7 @@ public class BeerControllerTest {
 	
 	@Test
 	public void getBeerById() throws Exception {
-        BDDMockito.given(beerRepository.findById(Mockito.any(UUID.class))).willReturn(Optional.of(Beer.builder().build()));
+        BDDMockito.given(beerRepository.findById(Mockito.any(UUID.class))).willReturn(Optional.of(Beer.builder().id(UUID.randomUUID()).beerName("Nice Ale").beerStyle("ALE").price(new BigDecimal("9.99")).upc(123456789L).build()));
 
         mockMvc.perform(
     		get(BeerController.BASE_URL + "/{beerId}", UUID.randomUUID().toString())
@@ -58,6 +59,17 @@ public class BeerControllerTest {
         	),
         	RequestDocumentation.requestParameters(
         		RequestDocumentation.parameterWithName("iscold").description("Is beer cold?")
+        	),
+        	PayloadDocumentation.responseFields(
+        		PayloadDocumentation.fieldWithPath("id").description("Id of the beer"),
+        		PayloadDocumentation.fieldWithPath("version").description("Version number"),
+        		PayloadDocumentation.fieldWithPath("createdDate").description("Date created"),
+        		PayloadDocumentation.fieldWithPath("lastModifiedDate").description("Date updated"),
+        		PayloadDocumentation.fieldWithPath("beerName").description("Beer name"),
+        		PayloadDocumentation.fieldWithPath("beerStyle").description("beer style"),
+        		PayloadDocumentation.fieldWithPath("upc").description("UPC of beer"),
+        		PayloadDocumentation.fieldWithPath("price").description("Price"),
+        		PayloadDocumentation.fieldWithPath("quantityOnHand").description("Quantity on hand")
         	)
         ));
     }
