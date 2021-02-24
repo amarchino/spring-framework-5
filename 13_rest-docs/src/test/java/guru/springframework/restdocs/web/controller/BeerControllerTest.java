@@ -10,13 +10,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +30,8 @@ import guru.springframework.restdocs.web.controllers.BeerController;
 import guru.springframework.restdocs.web.model.BeerDto;
 import guru.springframework.restdocs.web.model.BeerStyleEnum;
 
+@AutoConfigureRestDocs
+@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(BeerController.class)
 @ComponentScan(basePackages = "guru.springframework.restdocs.web.mappers")
 public class BeerControllerTest {
