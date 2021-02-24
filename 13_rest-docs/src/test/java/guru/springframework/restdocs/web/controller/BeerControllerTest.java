@@ -46,11 +46,20 @@ public class BeerControllerTest {
 	public void getBeerById() throws Exception {
         BDDMockito.given(beerRepository.findById(Mockito.any(UUID.class))).willReturn(Optional.of(Beer.builder().build()));
 
-        mockMvc.perform(get(BeerController.BASE_URL + "/{beerId}", UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(document("v1/beer", RequestDocumentation.pathParameters(
-            	RequestDocumentation.parameterWithName("beerId").description("UUID of the selected beer to get")
-            )));
+        mockMvc.perform(
+    		get(BeerController.BASE_URL + "/{beerId}", UUID.randomUUID().toString())
+    		.param("iscold", "yes")
+    		.accept(MediaType.APPLICATION_JSON)
+    	)
+        .andExpect(status().isOk())
+        .andDo(document("v1/beer",
+        	RequestDocumentation.pathParameters(
+        		RequestDocumentation.parameterWithName("beerId").description("UUID of the selected beer to get")
+        	),
+        	RequestDocumentation.requestParameters(
+        		RequestDocumentation.parameterWithName("iscold").description("Is beer cold?")
+        	)
+        ));
     }
 
     @Test
