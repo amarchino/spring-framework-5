@@ -57,7 +57,7 @@ public class BeerControllerTest {
     		.accept(MediaType.APPLICATION_JSON)
     	)
         .andExpect(status().isOk())
-        .andDo(document("v1/beer",
+        .andDo(document("v1/beer-get",
         	RequestDocumentation.pathParameters(
         		RequestDocumentation.parameterWithName("beerId").description("UUID of the selected beer to get")
         	),
@@ -90,7 +90,7 @@ public class BeerControllerTest {
         	.content(beerDtoJson)
         )
         .andExpect(status().isCreated())
-        .andDo(document("v1/beer",
+        .andDo(document("v1/beer-new",
         	PayloadDocumentation.requestFields(
         		fields.withPath("id").ignored(),
         		fields.withPath("version").ignored(),
