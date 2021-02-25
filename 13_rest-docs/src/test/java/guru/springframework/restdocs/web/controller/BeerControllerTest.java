@@ -37,7 +37,7 @@ import guru.springframework.restdocs.web.controllers.BeerController;
 import guru.springframework.restdocs.web.model.BeerDto;
 import guru.springframework.restdocs.web.model.BeerStyleEnum;
 
-@AutoConfigureRestDocs
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.springframework.guru", uriPort = 80)
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(BeerController.class)
 @ComponentScan(basePackages = "guru.springframework.restdocs.web.mappers")
