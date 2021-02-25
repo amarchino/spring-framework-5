@@ -21,9 +21,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.constraints.ConstraintDescriptions;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -78,6 +82,7 @@ public class BeerControllerTest {
     public void saveNewBeer() throws Exception {
         BeerDto beerDto =  getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
+        ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
         mockMvc.perform(
         	post(BeerController.BASE_URL)
@@ -87,15 +92,15 @@ public class BeerControllerTest {
         .andExpect(status().isCreated())
         .andDo(document("v1/beer",
         	PayloadDocumentation.requestFields(
-        		PayloadDocumentation.fieldWithPath("id").ignored(),
-        		PayloadDocumentation.fieldWithPath("version").ignored(),
-        		PayloadDocumentation.fieldWithPath("createdDate").ignored(),
-        		PayloadDocumentation.fieldWithPath("lastModifiedDate").ignored(),
-        		PayloadDocumentation.fieldWithPath("beerName").description("Beer name"),
-        		PayloadDocumentation.fieldWithPath("beerStyle").description("beer style"),
-        		PayloadDocumentation.fieldWithPath("upc").description("UPC of beer").attributes(),
-        		PayloadDocumentation.fieldWithPath("price").description("Price"),
-        		PayloadDocumentation.fieldWithPath("quantityOnHand").ignored()
+        		fields.withPath("id").ignored(),
+        		fields.withPath("version").ignored(),
+        		fields.withPath("createdDate").ignored(),
+        		fields.withPath("lastModifiedDate").ignored(),
+        		fields.withPath("beerName").description("Beer name"),
+        		fields.withPath("beerStyle").description("beer style"),
+        		fields.withPath("upc").description("UPC of beer").attributes(),
+        		fields.withPath("price").description("Price"),
+        		fields.withPath("quantityOnHand").ignored()
         	)
         ));
     }
@@ -121,5 +126,19 @@ public class BeerControllerTest {
                 .upc(123123123123L)
                 .build();
 
+    }
+    
+    private static class ConstrainedFields {
+    	private final ConstraintDescriptions constraintDescriptions;
+    	public ConstrainedFields(Class<?> input) {
+    		this.constraintDescriptions = new ConstraintDescriptions(input);
+		}
+    	private FieldDescriptor withPath(String path) {
+    		return PayloadDocumentation.fieldWithPath(path)
+				.attributes(
+					Attributes.key("constraints")
+					.value(StringUtils.collectionToDelimitedString(this.constraintDescriptions.descriptionsForProperty(path), ". "))
+				);
+    	}
     }
 }
