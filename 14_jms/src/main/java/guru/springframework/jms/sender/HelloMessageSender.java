@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class HelloSender {
+public class HelloMessageSender {
 	
 	private final JmsTemplate jmsTemplate;
 
